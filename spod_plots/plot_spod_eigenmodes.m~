@@ -1,0 +1,13 @@
+%% Name - Sheel Nidhan
+%  Date - 11th September, 2019
+%  Plots for the eigenvalues results for prf_spod_re5e4_frinf paper
+
+dirout = '/home/sheel/Dropbox/research/sheel_papers/prf_spod_re5e4_frinf/template/figures/';
+
+
+%% Similarity of m = 2, St = 0 mode as a function of downstream distance
+
+close all;
+filename = './files/eigenmodes_similariy_diff_loc.mat';
+
+load(filename);

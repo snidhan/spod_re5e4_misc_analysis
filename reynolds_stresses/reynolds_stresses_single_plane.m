@@ -4,20 +4,20 @@ clear; clc;
 
 var1 = 'up';
 var2 = 'wp';
-%loc = [5; 10; 15; 20; 25; 30; 35; 40; 45; 50; 60; 65; 70; 75; 80; 85; 90; 95; 100; 110; 120];
-loc = [55];
+var3 = 'vp';
+loc = [5; 10; 15; 20; 25; 30; 35; 40; 45; 50; 55; 60; 65; 70; 75; 80; 85; 90; 95; 100; 110; 120];
 nstart = 1892600;
 nend   = 2613200;
 stride  = 100;
-dir_in = '/home/sheel/Work2/projects_data/spod_re5e4/frinf/data_files_uniform/';
+dir_in = '/mnt/RAID5/sheel/spod_re5e4/frinf/data_files_uniform/';
 nr = 356;
 ntheta = 258;
 N = (nend-nstart)/stride + 1;
 
 for x_loc = 1:size(loc,1)
 
-%% Reading the data files of radial velocity
-
+% Reading the data files of radial velocity
+disp(dir_in);
 dir = strcat(dir_in, 'x_D_', int2str(loc(x_loc,1)),'/');
 
 u = zeros(nr,ntheta,N);
@@ -27,6 +27,7 @@ for n = 1:N
     filename = strcat(dir, var1, '/', var1, '_', num2str(num,'%08.f'), '_', int2str(loc(x_loc,1)), '_', 'uniform_pchip.res');
     disp(filename);
     fid = fopen(filename);
+    disp(fid);
     h = fread(fid,0,'*uint64'); % May need adjusting
     a = fread(fid, nr*ntheta, '*double');
     fclose(fid);
@@ -37,7 +38,7 @@ for n = 1:N
    end
 end
 
-%% Reading the data files of streamwise velocity
+% Reading the data files of streamwise velocity
 
 w = zeros(nr,ntheta,N);
 
@@ -56,43 +57,54 @@ for n = 1:N
    end
 end
 
-%% Average of the velocity fields
+% Reading the files of azimuthal velocity
 
-w_mean_theta = squeeze(mean(w,2));
-u_mean_theta = squeeze(mean(u,2));
+v = zeros(nr,ntheta,N);
 
-w_mean_th_time = squeeze(mean(w_mean_theta,2));
-u_mean_th_time = squeeze(mean(u_mean_theta,2));
-
-
-clear w_mean_theta;
-clear u_mean_theta;
-%% Fluctuations of radial and streamwise velocity
-
-u_fluc = zeros(nr,ntheta,N);
-w_fluc = zeros(nr,ntheta,N);
-
-for i = 1:size(w,1)
-    disp(i);
-    for j = 1:size(w,2)
-        for k = 1:size(w,3)
-            w_fluc(i,j,k) = w(i,j,k) - w_mean_th_time(i,1);
+for n = 1:N
+    num = (n-1)*stride + nstart;
+    filename = strcat(dir, var3, '/', var3, '_', num2str(num,'%08.f'), '_', int2str(loc(x_loc,1)), '_', 'uniform_pchip.res');
+    disp(filename);
+    fid = fopen(filename);
+    h = fread(fid,0,'*uint64'); % May need adjusting
+    a = fread(fid, nr*ntheta, '*double');
+    fclose(fid);
+   for j = 1:ntheta
+        for i = 1:nr
+            v(i,j,n) = a((j-1)*nr + i, 1);
         end
-    end
+   end
 end
 
+%% Centering the velocity values of respective velocities
+disp('centering the velocities');
+u_centered = 0.5*(u(2:nr-1,2:ntheta-1,:) + u(1:nr-2,2:ntheta-1,:));
+v_centered = 0.5*(v(2:nr-1,2:ntheta-1,:) + v(2:nr-1,1:ntheta-2,:));
+w_centered = w(2:nr-1,2:ntheta-1,:);
+disp('centered the velocities');
+clear u; clear v; clear w;
+%% Average of the velocity fields in time 
 
-for i = 1:size(u,1)
-    disp(i);
-    for j = 1:size(u,2)
-        for k = 1:size(u,3)
-            u_fluc(i,j,k) = u(i,j,k) - u_mean_th_time(i,1);
-        end
-    end
-end
+w_mean = squeeze(mean(w_centered,3));
+v_mean = squeeze(mean(v_centered,3));
+u_mean = squeeze(mean(u_centered,3));
+disp('removed the mean velocities');
+% w_mean_th_time = squeeze(mean(w_mean_theta,2));
+% u_mean_th_time = squeeze(mean(u_mean_theta,2));
+% v_mean_th_time = squeeze(mean(v_mean_theta,2));
 
-clear u w
+
+%% Fluctuations of radial, streamwise and azimuthal velocity
+
+u_fluc = u_centered - u_mean;
+v_fluc = v_centered - v_mean;
+w_fluc = w_centered - w_mean;
+
 %% Calculating the averaged Reynolds stress over time
+
+reystress_ww = w_fluc.*w_fluc;
+reystress_ww_av = mean(reystress_ww,3);
+reystress_ww_av_th = squeeze(mean(reystress_ww_av,2));
 
 reystress_uw = u_fluc.*w_fluc;
 reystress_uw_av = mean(reystress_uw,3);
@@ -104,27 +116,40 @@ reystress_uu_av = mean(reystress_uu,3);
 reystress_uu_av_th = squeeze(mean(reystress_uu_av,2));
 
 
-reystress_ww = w_fluc.*w_fluc;
-reystress_ww_av = mean(reystress_ww,3);
-reystress_ww_av_th = squeeze(mean(reystress_ww_av,2));
+reystress_vv = v_fluc.*v_fluc;
+reystress_vv_av = mean(reystress_vv,3);
+reystress_vv_av_th = squeeze(mean(reystress_vv_av,2));
 
+reystress_wv = w_fluc.*v_fluc;
+reystress_wv_av = mean(reystress_wv,3);
+reystress_wv_av_th = squeeze(mean(reystress_wv_av,2));
 
+reystress_uv = u_fluc.*v_fluc;
+reystress_uv_av = mean(reystress_uv,3);
+reystress_uv_av_th = squeeze(mean(reystress_uv_av,2));
+
+disp('Calculated the reynolds stresses');
+
+clear u_fluc; clear v_fluc; clear w_fluc;
+clear u_centered; clear v_centered; clear w_centered;
+clear reystress_uu; clear reystress_vv; clear reystress_ww;
+clear reystress_uv; clear reystress_wv; clear reystress_uw;
 %% Reading the grid files
 
-theta = linspace(0,2*pi,ntheta)';
-numvar = 3;   % numvar = 3 (only velocity is used for kernel); 
-              % numvar = 4 (velocity and density is used for kernel)
-
-fid = fopen('/home/sheel/Work/projects/spod_re5e4/grid/frinf/x1_grid.in');  %% Reading the radial grid
-%fid = fopen('/home/sheel/Work/projects/spod_re5e4/grid/fr2/x1_grid.in');   %% Reading the radial grid
-
-D = cell2mat(textscan(fid, '%f%f', 'headerlines', 1));
-
-r = D(1:end-9,2);
-
-for i = 1:size(r,1)-2
-    rc(i,1) = 0.5*(r(i+1,1) + r(i,1));  % Centered the grid faces to grid centers
-end
+% theta = linspace(0,2*pi,ntheta)';
+% numvar = 3;   % numvar = 3 (only velocity is used for kernel); 
+%               % numvar = 4 (velocity and density is used for kernel)
+% 
+% fid = fopen('/home/sheel/Work/projects/spod_re5e4/grid/frinf/x1_grid.in');  %% Reading the radial grid
+% %fid = fopen('/home/sheel/Work/projects/spod_re5e4/grid/fr2/x1_grid.in');   %% Reading the radial grid
+% 
+% D = cell2mat(textscan(fid, '%f%f', 'headerlines', 1));
+% 
+% r = D(1:end-9,2);
+% 
+% for i = 1:size(r,1)-2
+%     rc(i,1) = 0.5*(r(i+1,1) + r(i,1));  % Centered the grid faces to grid centers
+% end
 
 
 %% Saving the mat files

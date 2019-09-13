@@ -7,7 +7,7 @@ clc; clear;
 
 Nfreq = 512;
 Novlp = 256;
-N     = 7000;
+N     = 7200;
 mode  = 0;
 stride = 100;
 nstart = 1892600;
@@ -18,9 +18,9 @@ Nblk = floor((N-Novlp)/(Nfreq-Novlp));
 Nrows = numvar*nr*Nblk;
 Nrows_permode = numvar*nr;
 
-dir2 = '/home/sheel/Work2/projects_data/spod_re5e4/frinf/spod_data/x_D_50/eigenmodes/';
+dir2 = '/home/sheel/Work2/projects_data/spod_re5e4/frinf/spod_data/run_2.0/x_D_50/eigenmodes/';
 disp(dir2);
-dir3 = '/home/sheel/Work2/projects_data/spod_re5e4/frinf/spod_data/x_D_50/eigenspectra/';
+dir3 = '/home/sheel/Work2/projects_data/spod_re5e4/frinf/spod_data/run_2.0/x_D_50/eigenspectra/';
 disp(dir3);
 
 %% Loading the grid file in radial direction
@@ -28,9 +28,31 @@ disp(dir3);
 fid = fopen('/home/sheel/Work/projects/spod_re5e4/grid/frinf/x1_grid.in');  %% Reading the radial grid
 D = cell2mat(textscan(fid, '%f%f', 'headerlines', 1));
 r = D(1:end-9,2);
-
+ntheta = 256;
 for i = 1:size(r,1)-2
     rc(i,1) = 0.5*(r(i+1,1) + r(i,1));  % Centered the grid faces to grid centers
+end
+
+% Weights of radial direction
+nothetar = length(rc);
+weight_thetar = zeros(nr,1);
+weight_thetar(1) = pi*( rc(1) + (rc(2)-rc(1))/2)^2 - pi*(rc(1))^2;
+
+for i=2:nothetar-1
+    weight_thetar(i) = pi*( rc(i) + (rc(i+1)-rc(i))/2 )^2 - pi*( rc(i) - (rc(i)-rc(i-1))/2 )^2;
+end
+
+weight_thetar(nothetar) = pi*rc(end)^2 - pi*( rc(end) - (rc(end)-rc(end-1))/2 )^2;
+
+% Weights in azimuthal direction
+weight_theta = (2*pi/ntheta)*ones(ntheta,1);   % Check once again SHEEL NIDHAN
+
+if numvar == 4
+    weight_rtheta = weight_thetar*weight_theta';
+    weight_rtheta_column = weight_rtheta(:);
+elseif numvar == 3
+    weight_rtheta = weight_thetar;
+    weight_rtheta_column = weight_rtheta(:);
 end
 
 %% Reading the time file
@@ -132,8 +154,7 @@ for m = 1:m_sampled
         for var = 1:numvar
             spod_mode = spod_modes1_arranged(:,var,m,fn);
             spod_mode_mag = spod_mode.*conj(spod_mode);
-            spod_mode_mag_radial = spod_mode_mag.*rc;
-            alpha = trapz(rc,spod_mode_mag_radial);
+            alpha = dot(weight_thetar, spod_mode_mag);
             spod_modes1_arranged(:,var,m,fn) = spod_modes1_arranged(:,var,m,fn)/sqrt(alpha);
         end
     end
@@ -179,9 +200,8 @@ end
 %% Plot 
 
 figure;
-[C,h] = polarcont(rc,theta,imag(dominant_eddy_physical(:,:,1,6)),5);
+[C,h] = polarcont(rc,theta,real(dominant_eddy_physical(:,:,1,6)),5);
 set(h,'LineColor','none')
-colormap('jet');
 colorbar;
 axis equal
 
