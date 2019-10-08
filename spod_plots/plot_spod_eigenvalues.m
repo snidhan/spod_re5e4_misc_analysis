@@ -19,12 +19,24 @@ set(groot,'defaultLegendInterpreter','latex');
 Nplot = 25;   % No. of modes to plot
 C = repmat(linspace(1,0.1,Nplot).',1,3);
 figure;
+
+
+first_spod_mode  = eigvalues_spectrum_plot(2).eigvalue(:,2);
+second_spod_mode = eigvalues_spectrum_plot(2).eigvalue(:,1);
+hold on;
+box on;
+
 for i = 1:Nplot
     grey = C(Nplot-i+1,:);
-    h1(i) =  loglog(eigvalues_spectrum_plot(2).freq',eigvalues_spectrum_plot(2).eigvalue(:,i), 'LineWidth',2,'Color',grey);
-    hold on;
+    eigvalue = eigvalues_spectrum_plot(2).eigvalue(:,i);
+    f = eigvalues_spectrum_plot(2).freq';
+    idx = f>0 & eigvalue>0;
+    h1(i) =  plot(f(idx), eigvalue(idx), 'LineWidth',2,'Color',grey);
     grid on;
 end
+patch([f(idx)' fliplr(f(idx)')], [second_spod_mode(idx)'  fliplr(first_spod_mode(idx)')], 'r');
+hold off;
+set(gca, 'XScale', 'log', 'YScale','log')
 
 xlim([0 10]);
 ylim([10^-12 1*10^-1]);
@@ -33,7 +45,7 @@ yticks([10^-12 10^-10 10^-8 10^-6 10^-4 10^-2])
 ax = gca;
 ax.FontSize = 16; 
 
-hXLabel = xlabel('$St$','interpreter','latex','fontsize',15); %#ok<*NASGU>
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15); %#ok<*NASGU>
 hYLabel = ylabel('$\lambda$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');
@@ -48,12 +60,20 @@ set(groot,'defaultLegendInterpreter','latex');
 Nplot = 25;   % No. of modes to plot
 C = repmat(linspace(1,0.1,Nplot).',1,3);
 figure;
+
+first_spod_mode  = eigvalues_spectrum_plot(5).eigvalue(:,2);
+second_spod_mode = eigvalues_spectrum_plot(5).eigvalue(:,1);
+hold on;
+box on;
+
 for i = 1:Nplot
     grey = C(Nplot-i+1,:);
-    h1(i) =  loglog(eigvalues_spectrum_plot(5).freq',eigvalues_spectrum_plot(5).eigvalue(:,i), 'LineWidth',2,'Color',grey);
-    hold on;
+    h1(i) =  plot(eigvalues_spectrum_plot(5).freq',eigvalues_spectrum_plot(5).eigvalue(:,i), 'LineWidth',2,'Color',grey);
     grid on;
 end
+patch([f(idx)' fliplr(f(idx)')], [second_spod_mode(idx)'  fliplr(first_spod_mode(idx)')], 'r');
+hold off;
+set(gca, 'XScale', 'log', 'YScale','log');
 
 xlim([0 10]);
 ylim([10^-12 1*10^-1]);
@@ -62,7 +82,7 @@ yticks([10^-12 10^-10 10^-8 10^-6 10^-4 10^-2])
 ax = gca;
 ax.FontSize = 16; 
 
-hXLabel = xlabel('$St$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
 hYLabel = ylabel('$\lambda$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');
@@ -78,12 +98,20 @@ set(groot,'defaultLegendInterpreter','latex');
 Nplot = 25;   % No. of modes to plot
 C = repmat(linspace(1,0.1,Nplot).',1,3);
 figure;
+
+first_spod_mode  = eigvalues_spectrum_plot(3).eigvalue(:,2);
+second_spod_mode = eigvalues_spectrum_plot(3).eigvalue(:,1);
+hold on;
+box on;
+
 for i = 1:Nplot
     grey = C(Nplot-i+1,:);
-    h1(i) =  loglog(eigvalues_spectrum_plot(3).freq',eigvalues_spectrum_plot(3).eigvalue(:,i), 'LineWidth',2,'Color',grey);
-    hold on;
+    h1(i) =  plot(eigvalues_spectrum_plot(3).freq',eigvalues_spectrum_plot(3).eigvalue(:,i), 'LineWidth',2,'Color',grey);
     grid on;
 end
+patch([f(idx)' fliplr(f(idx)')], [second_spod_mode(idx)'  fliplr(first_spod_mode(idx)')], 'r');
+hold off;
+set(gca, 'XScale', 'log', 'YScale','log');
 
 xlim([0 10]);
 ylim([10^-12 1*10^-1]);
@@ -92,7 +120,7 @@ yticks([10^-12 10^-10 10^-8 10^-6 10^-4 10^-2])
 ax = gca;
 ax.FontSize = 16; 
 
-hXLabel = xlabel('$St$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
 hYLabel = ylabel('$\lambda$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');
@@ -108,12 +136,20 @@ set(groot,'defaultLegendInterpreter','latex');
 Nplot = 25;   % No. of modes to plot
 C = repmat(linspace(1,0.1,Nplot).',1,3);
 figure;
+
+first_spod_mode  = eigvalues_spectrum_plot(6).eigvalue(:,2);
+second_spod_mode = eigvalues_spectrum_plot(6).eigvalue(:,1);
+hold on;
+box on;
+
 for i = 1:Nplot
     grey = C(Nplot-i+1,:);
-    h1(i) =  loglog(eigvalues_spectrum_plot(6).freq',eigvalues_spectrum_plot(6).eigvalue(:,i), 'LineWidth',2,'Color',grey);
-    hold on;
+    h1(i) =  plot(eigvalues_spectrum_plot(6).freq',eigvalues_spectrum_plot(6).eigvalue(:,i), 'LineWidth',2,'Color',grey);
     grid on;
 end
+patch([f(idx)' fliplr(f(idx)')], [second_spod_mode(idx)'  fliplr(first_spod_mode(idx)')], 'r');
+hold off;
+set(gca, 'XScale', 'log', 'YScale','log');
 
 xlim([0 10]);
 ylim([10^-12 1*10^-1]);
@@ -122,7 +158,7 @@ yticks([10^-12 10^-10 10^-8 10^-6 10^-4 10^-2])
 ax = gca;
 ax.FontSize = 16; 
 
-hXLabel = xlabel('$St$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
 hYLabel = ylabel('$\lambda$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');
@@ -156,7 +192,7 @@ ax = gca;
 ax.FontSize = 16; 
 
 hXLabel = xlabel('$m$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$St$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');  
 print(gcf,strcat(dirout, 'contourf_allmf_x_D_',sprintf('%03d',20),'_spod.png'),'-dpng','-r600');
@@ -182,7 +218,7 @@ ax = gca;
 ax.FontSize = 16; 
 
 hXLabel = xlabel('$m$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$St$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');  
 print(gcf,strcat(dirout, 'contourf_allmf_x_D_',sprintf('%03d',40),'_spod.png'),'-dpng','-r600');
@@ -208,7 +244,7 @@ ax = gca;
 ax.FontSize = 16; 
 
 hXLabel = xlabel('$m$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$St$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');  
 print(gcf,strcat(dirout, 'contourf_allmf_x_D_',sprintf('%03d',60),'_spod.png'),'-dpng','-r600');
@@ -233,7 +269,7 @@ ax = gca;
 ax.FontSize = 16; 
 
 hXLabel = xlabel('$m$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$St$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');  
 print(gcf,strcat(dirout, 'contourf_allmf_x_D_',sprintf('%03d',80),'_spod.png'),'-dpng','-r600');
@@ -253,18 +289,18 @@ set(groot,'defaultAxesTickLabelInterpreter','latex');
 set(groot,'defaulttextinterpreter','latex');
 set(groot,'defaultLegendInterpreter','latex');
 
-h1 = loglog(x_sample_closest(1:end), squeeze(eigenspectra_allm(6,1,2,1:end)), 'ko');
+h1 = loglog(x_sample_closest(1:end-1), squeeze(eigenspectra_allm(6,1,2,1:end-1)), 'ko');
 hold on;
-h2 = loglog(x_sample_closest(1:end), squeeze(eigenspectra_allm(1,1,3,1:end)), 'ks');
-y1 = 0.04*x_sample_closest(2:3,1).^(coeffs_m1_st0136_55(1));
-h3 = loglog(x_sample_closest(2:3,1),y1, 'k-', 'Linewidth', 2);
-y2 = 0.10*x_sample_closest(14:20,1).^(coeffs_m1_st0136_70_120(1));
-h4 = loglog(x_sample_closest(14:20,1),y2, 'r-', 'Linewidth', 2);
-y3 = 0.005*x_sample_closest(4:6,1).^(coeffs_m2_st0(1));
-h5 = loglog(x_sample_closest(4:6,1),y3, 'b-', 'Linewidth', 2);
-h6 = text(12, 0.003,'$x^{-1.13}$','interpreter','latex','FontSize', 12);
-h7 = text(55, 0.00015,'$x^{-1.42}$','interpreter','latex','FontSize', 12);
-h8 = text(18, 0.00055,'$x^{-0.60}$','interpreter','latex','FontSize', 12);
+h2 = loglog(x_sample_closest(1:end-1), squeeze(eigenspectra_allm(1,1,3,1:end-1)), 'ks');
+y1 = 0.035*x_sample_closest(2:11,1).^(coeffs_m1_st0136_55(1));
+h3 = loglog(x_sample_closest(2:11,1),y1, 'k--', 'Linewidth', 1.5);
+y2 = 0.12*x_sample_closest(14:21,1).^(coeffs_m1_st0136_70_120(1));
+h4 = loglog(x_sample_closest(14:21,1),y2, 'r--', 'Linewidth', 1.5);
+y3 = 0.0054*x_sample_closest(2:21,1).^(coeffs_m2_st0(1));
+h5 = loglog(x_sample_closest(2:21,1),y3, 'b--', 'Linewidth', 1.5);
+%h6 = text(12, 0.003,'$x^{-1.13}$','interpreter','latex','FontSize', 12);
+%h7 = text(55, 0.00015,'$x^{-1.42}$','interpreter','latex','FontSize', 12);
+%h8 = text(18, 0.00055,'$x^{-0.60}$','interpreter','latex','FontSize', 12);
 
 xlim([1 125]);
 xticks([1 10 100]);
@@ -277,9 +313,9 @@ box on;
 hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
 hYLabel = ylabel('$\lambda^{(1)}$','interpreter','latex','fontsize',15);
 
-hLegend = legend([h1,h2], '$m=1, St=0.136$', '$m=2, St=0$');
+hLegend = legend([h1,h2,h3,h4,h5], '$m=1, \mbox{\textit{St}}=0.136$ (VS)', '$m=2, \mbox{\textit{St}}=0$ (DH)', '$x^{-1.13}$','$x^{-1.45}$','$x^{-0.65}$');
 hLegend.Interpreter = 'Latex';
-hLegend.FontSize = 15;
+hLegend.FontSize = 12;
 hLegend.FontWeight = 'bold';
 hLegend.Location = 'southwest';
 
@@ -298,30 +334,29 @@ C = {'bo','r*','kd','c>','g<','b+','r^','kv','gp','ch'}; % Cell array of markers
 
 count = 1;
 
-Legend = cell(10,1);
-Legend{1} = 'x/D = 10';
-Legend{2} = 'x/D = 20';
-Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 40';
-Legend{5} = 'x/D = 50';
-Legend{6} = 'x/D = 60';
-Legend{7} = 'x/D = 70';
-Legend{8} = 'x/D = 80';
-Legend{9} = 'x/D = 90';
-Legend{10} = 'x/D = 100';
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
 
 
 count = 1;
 Nf_sampled = 100;
 figure;
 hold on;
-for i = 2:2:20
+for i = 4:2:20
    disp(i);
-   plot(f(1:Nf_sampled), eigenspectra_allm(:,1,3,i)/((TKE_centerline_loc_planes(i,2)^0.5)*LK_TKE_loc_planes(i,2))^2, C{count});
+   plot(f(1:Nf_sampled)*(LK_TKE_loc_planes(i,2)/TKE_centerline_loc_planes(i,2)^0.5), eigenspectra_allm(:,1,3,i)/((TKE_centerline_loc_planes(i,2)^0.5)*LK_TKE_loc_planes(i,2))^2, C{count});
    count = count + 1;
 end
 
-xlim([0 0.5]);
+%xlim([0 0.5]);
 ylim([0 0.2]);
 
 ax = gca;
@@ -329,8 +364,8 @@ ax.FontSize = 16;
 
 box on;
 
-hXLabel = xlabel('$St$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$\lambda^{(1)}(m=2, St=0)/(K^{1/2}L_{k})^{2}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\lambda^{(1)}(m=2, \mbox{\textit{St}}=0)/(K_{o}^{1/2}L_{k})^{2}$','interpreter','latex','fontsize',15);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -339,9 +374,62 @@ hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
 set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_m2_st0_eigvalue_x_D_klk', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_m2_st0_eigvalue_x_D_klk', '.eps'),'-depsc2','-r600');
+% print(gcf,strcat(dirout, 'similarity_m2_st0_eigvalue_x_D_klk', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'similarity_m2_st0_eigvalue_x_D_klk', '.eps'),'-depsc2','-r600');
 
+%% Unscaled analysis of the m=2, St=0 leading order SPOD mode
+
+clearvars -except dirout;
+close all;
+filename = './files/eigvalues_similarity_diff_loc.mat';
+load(filename);
+
+C = {'bo','r*','kd','c>','g<','b+','r^','kv','gp','ch'}; % Cell array of markerstyle
+
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
+
+
+count = 1;
+Nf_sampled = 100;
+figure;
+hold on;
+for i = 4:2:20
+   disp(i);
+   plot(f(1:Nf_sampled), eigenspectra_allm(:,1,3,i), C{count});
+   count = count + 1;
+end
+
+xlim([0 0.5]);
+ylim([0 0.002]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\lambda^{(1)}(m=2, \mbox{\textit{St}}=0)/(K_{o}^{1/2}L_{k})^{2}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'unscaled_m2_st0_eigvalue_x_D', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'unscaled_m2_st0_eigvalue_x_D', '.eps'),'-depsc2','-r600');
 
 %% Similarity analysis of the m=1, St=0.136 leading order SPOD mode
 
@@ -354,24 +442,23 @@ C = {'bo','r*','kd','c>','g<','b+','r^','kv','gp','ch'}; % Cell array of markers
 
 count = 1;
 
-Legend = cell(10,1);
-Legend{1} = 'x/D = 10';
-Legend{2} = 'x/D = 20';
-Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 40';
-Legend{5} = 'x/D = 50';
-Legend{6} = 'x/D = 60';
-Legend{7} = 'x/D = 70';
-Legend{8} = 'x/D = 80';
-Legend{9} = 'x/D = 90';
-Legend{10} = 'x/D = 100';
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
 
 
 count = 1;
 Nf_sampled = 100;
 figure;
 hold on;
-for i = 2:2:20
+for i = 4:2:20
    disp(i);
    plot(f(1:Nf_sampled), eigenspectra_allm(:,1,2,i)/((ud_centerline_loc_planes(i,2))*LK_mean_loc_planes(i,2))^2, C{count});
    count = count + 1;
@@ -385,8 +472,8 @@ ax.FontSize = 16;
 
 box on;
 
-hXLabel = xlabel('$St$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$\lambda^{(1)}(m=1, St=0.136)/(U_{d}L_{d})^{2}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\lambda^{(1)}(m=1, \mbox{\textit{St}}=0.135)/(U_{d}L_{d})^{2}$','interpreter','latex','fontsize',15);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -397,6 +484,60 @@ hLegend.Position = [0 0 1 1];
 set(gcf, 'PaperPositionMode', 'auto');
 print(gcf,strcat(dirout, 'similarity_m1_st0136_eigvalue_x_D_udld', '.png'),'-dpng2','-r600');  
 print(gcf,strcat(dirout, 'similarity_m1_st0136_eigvalue_x_D_udld', '.eps'),'-depsc2','-r600');
+
+%% Similarity analysis of the m=1, St=0.136 leading order SPOD mode
+
+clearvars -except dirout;
+close all;
+filename = './files/eigvalues_similarity_diff_loc.mat';
+load(filename);
+
+C = {'bo','r*','kd','c>','g<','b+','r^','kv','gp','ch'}; % Cell array of markerstyle
+
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
+
+
+count = 1;
+Nf_sampled = 100;
+figure;
+hold on;
+for i = 4:2:20
+   disp(i);
+   plot(f(1:Nf_sampled), eigenspectra_allm(:,1,2,i), C{count});
+   count = count + 1;
+end
+
+xlim([0 0.5]);
+ylim([0 0.002]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$\mbox{\textit{St}}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$\lambda^{(1)}(m=1, \mbox{\textit{St}}=0.136)/(U_{d}L_{d})^{2}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'unscaled_m1_st0136_eigvalue_x_D', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'unscaled_m1_st0136_eigvalue_x_D', '.eps'),'-depsc2','-r600');
 
 %% Bar chart plot for the dominance shift from m = 2 to m = 1 mode 
 
@@ -426,7 +567,7 @@ ylim([0 20]);
 ax = gca;
 ax.FontSize = 16; 
 
-labels = {'SPOD Mode 1','SPOD Mode 2','SPOD Mode 3'};
+labels = {'$\lambda^{(1)}$','$\lambda^{(2)}$','$\lambda^{(3)}$'};
 hLegend = legend(labels,'Location','NorthEast');
 hLegend.Interpreter = 'Latex';
 hLegend.FontSize = 15;
@@ -457,7 +598,7 @@ ylim([0 20]);
 ax = gca;
 ax.FontSize = 16; 
 
-labels = {'SPOD Mode 1','SPOD Mode 2','SPOD Mode 3'};
+labels = {'$\lambda^{(1)}$','$\lambda^{(2)}$','$\lambda^{(3)}$'};
 hLegend = legend(labels,'Location','NorthEast');
 hLegend.Interpreter = 'Latex';
 hLegend.FontSize = 15;
@@ -488,7 +629,7 @@ ylim([0 20]);
 ax = gca;
 ax.FontSize = 16; 
 
-labels = {'SPOD Mode 1','SPOD Mode 2','SPOD Mode 3'};
+labels = {'$\lambda^{(1)}$','$\lambda^{(2)}$','$\lambda^{(3)}$'};
 hLegend = legend(labels,'Location','NorthEast');
 hLegend.Interpreter = 'Latex';
 hLegend.FontSize = 15;
@@ -498,8 +639,8 @@ hXLabel = xlabel('$m$','interpreter','latex','fontsize',15);
 hYLabel = ylabel('$\xi^{(i)}$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');  
-print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',60),'_spod.png'),'-dpng2','-r600');
-print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',60),'_spod.eps'),'-depsc2','-r600');
+print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',80),'_spod.png'),'-dpng2','-r600');
+print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',80),'_spod.eps'),'-depsc2','-r600');
 
 % x/D = 80, Contourmap
 
@@ -519,7 +660,7 @@ ylim([0 20]);
 ax = gca;
 ax.FontSize = 16; 
 
-labels = {'SPOD Mode 1','SPOD Mode 2','SPOD Mode 3'};
+labels = {'$\lambda^{(1)}$','$\lambda^{(2)}$','$\lambda^{(3)}$'};
 hLegend = legend(labels,'Location','NorthEast');
 hLegend.Interpreter = 'Latex';
 hLegend.FontSize = 15;
@@ -529,5 +670,5 @@ hXLabel = xlabel('$m$','interpreter','latex','fontsize',15);
 hYLabel = ylabel('$\xi^{(i)}$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');  
-print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',80),'_spod.png'),'-dpng2','-r600');
-print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',80),'_spod.eps'),'-depsc2','-r600');
+print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',100),'_spod.png'),'-dpng2','-r600');
+print(gcf,strcat(dirout, 'bar_allm_x_D_',sprintf('%03d',100),'_spod.eps'),'-depsc2','-r600');

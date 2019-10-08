@@ -42,6 +42,13 @@ hYLabel = ylabel('$U_{d}$','interpreter','latex','fontsize',15);
 % print(gcf,strcat(dirout, 'udefect_x_D.png'),'-dpng2','-r600');  
 % print(gcf,strcat(dirout, 'udefect_x_D.eps'),'-depsc2','-r600');
 
+                       
+loc = udefect(33:end,1);                         
+log_max_uw = log(udefect(33:end,2));
+log_loc =  log(loc);
+[coeffs, S] = polyfit(log_loc, log_max_uw, 1);
+y_fitted = polyval(coeffs, log_loc);
+
 %% Plotting the wake width as a function of x/D
 
 close;
@@ -76,9 +83,16 @@ hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
 hYLabel = ylabel('$L_{d}$','interpreter','latex','fontsize',15);
 
 
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'ldefect_x_D.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'ldefect_x_D.eps'),'-depsc2','-r600');
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'ldefect_x_D.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'ldefect_x_D.eps'),'-depsc2','-r600');
+
+
+loc = wake_width(33:end,1);                         
+log_max_uw = log(wake_width(33:end,2));
+log_loc =  log(loc);
+[coeffs, S] = polyfit(log_loc, log_max_uw, 1);
+y_fitted = polyval(coeffs, log_loc);
 
 %% Plotting centerline turbulent quantities as a function of x/D
 
@@ -218,7 +232,7 @@ hYLabel = ylabel('$K^{1/2}/U_{d}$','interpreter','latex','fontsize',15);
 
 
 hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('($K^{1/2}$, $u_{x}^{''}$, $u_{y}^{''}$, $u_{z}^{''}$)/$(U_{d})$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('($K^{1/2}$, $u_{x}^{''}$, $u_{y}^{''}$, $u_{z}^{''}$)/$U_{d}$','interpreter','latex','fontsize',15);
 
 
 hLegend = legend([h1,h2,h3,h4], '$u_{x}^{''}/U_{d}$', '$u_{y}^{''}/U_{d}$', '$u_{z}^{''}/U_{d}$', '$K^{1/2}/U_{d}$');
@@ -232,35 +246,83 @@ set(gcf, 'PaperPositionMode', 'auto');
 print(gcf,strcat(dirout, 'ratioturbud_x_D.png'),'-dpng2','-r600');  
 print(gcf,strcat(dirout, 'ratioturbud_x_D.eps'),'-depsc2','-r600');
 
-%% Similarity profiles of <u_{x}u_{r}> at different x/D locations using defect velocity wake width
+
+%% Plotting the ratio of K^1/2 and Udefect as a function of x/D
 
 close;
 
-load('./files/similarity_uxur.mat');
+filename = './files/Half_length_zwhazi_WMEAN.dat';
+LK_mean  = importdata(filename);
 
-figure; 
+filename = './files/Half_length_zwhazi_TKE.dat';
+LK_tke   = importdata(filename);
+
+ratio = LK_tke(:,2)./LK_mean(:,2);
+
+set(groot,'defaultAxesTickLabelInterpreter','latex');  
+set(groot,'defaulttextinterpreter','latex');
+set(groot,'defaultLegendInterpreter','latex');
+
+h1 = plot(LK_mean(:,1), ratio, 'ko');
+
+xlim([0 125]);
+xticks([0 20 40 60 80 100 120]);
+ylim([1 1.5]);
+yticks([1 1.1 1.2 1.3 1.4 1.5])
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$K^{1/2}/U_{d}$','interpreter','latex','fontsize',15);
+
+
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$L_{k}/L_{d}$','interpreter','latex','fontsize',15);
+
+
+% hLegend = legend([h1,h2,h3,h4], '$u_{x}^{''}/U_{d}$', '$u_{y}^{''}/U_{d}$', '$u_{z}^{''}/U_{d}$', '$K^{1/2}/U_{d}$');
+% hLegend.Interpreter = 'Latex';
+% hLegend.FontSize = 15;
+% hLegend.FontWeight = 'bold';
+% hLegend.Location = 'southeast';
+
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'ratiolkld_x_D.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'ratiolkld_x_D.eps'),'-depsc2','-r600');
+
+
+%% Similarity profiles of U at different x/D locations
+
+close;
+
+load('./files/similarity_w.mat');
+ 
+figure;
+
 hold on;
-C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
-color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
 
+lineStyles = distinguishable_colors(9);
 count = 1;
 
-Legend = cell(10,1);
-Legend{1} = 'x/D = 10';
-Legend{2} = 'x/D = 20';
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 25';
 Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 40';
-Legend{5} = 'x/D = 50';
-Legend{6} = 'x/D = 60';
-Legend{7} = 'x/D = 70';
-Legend{8} = 'x/D = 80';
-Legend{9} = 'x/D = 90';
-Legend{10} = 'x/D = 100';
+Legend{4} = 'x/D = 35';
+Legend{5} = 'x/D = 40';
+Legend{6} = 'x/D = 45';
+Legend{7} = 'x/D = 50';
+Legend{8} = 'x/D = 55';
+Legend{9} = 'x/D = 60';
 
 count = 1;
-for i = 2:2:20
+for i = 4:12
    disp(i);
-   plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), C{count}, 'Color', color{count}, 'Linewidth',2);
+   plot(rc(1:nr)/LK_mean_loc_planes(i,2), (1-mean_w_1d(1:nr,i))/max(1-mean_w_1d(:,i)), 'Color', lineStyles(count,:), 'Linewidth',2);
    count = count + 1;
 end
 
@@ -272,8 +334,8 @@ ax.FontSize = 16;
 
 box on;
 
-hXLabel = xlabel('$r/L_{d}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('-$<u_{x}u_{r}>$/max($<u_{x}u_{r}>_{r}$)','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\eta = r/L_{d}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$f(\eta)$','interpreter','latex','fontsize',15);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -282,10 +344,124 @@ hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
 set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld', '.eps'),'-depsc2','-r600');
+print(gcf,strcat(dirout, 'similarity_w_x_D_ld_20_60', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_w_x_D_ld_20_60', '.eps'),'-depsc2','-r600');
 
-close;
+% Unnormalized profiles of u at different x/D locations
+
+figure; 
+hold on;
+
+lineStyles = distinguishable_colors(10);
+count = 1;
+
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 25';
+Legend{3} = 'x/D = 30';
+Legend{4} = 'x/D = 35';
+Legend{5} = 'x/D = 40';
+Legend{6} = 'x/D = 45';
+Legend{7} = 'x/D = 50';
+Legend{8} = 'x/D = 55';
+Legend{9} = 'x/D = 60';
+
+
+count = 1;
+for i = 2:2:20
+   disp(i);
+   plot(rc(1:nr), (1-mean_w_1d(1:nr,i))/max(1-mean_w_1d(:,i)), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+xlim([0 10]);
+ylim([0 1.2]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$r$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$f(\eta)$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'unnormalized_w_x_D', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'unnormalized_w_x_D', '.eps'),'-depsc2','-r600');
+
+
+%% Similarity profiles of <u_{x}u_{r}> at different x/D locations using defect velocity wake width
+
+close all;
+
+load('./files/similarity_uxur.mat');
+reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
+reystress_uw_1d = reystress_uw_1d_smooth;
+
+figure; 
+hold on;
+C = {'-','-','-','-','-','-','-','-','-','-'}; % Cell array of linestyle
+color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+
+%lineStyles = linspecer(10);
+lineStyles = maxdistcolor(9,@srgb_to_Jab);
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 25';
+Legend{3} = 'x/D = 30';
+Legend{4} = 'x/D = 35';
+Legend{5} = 'x/D = 40';
+Legend{6} = 'x/D = 45';
+Legend{7} = 'x/D = 50';
+Legend{8} = 'x/D = 55';
+Legend{9} = 'x/D = 60';
+
+count = 1;
+
+for i = 4:12
+   disp(i);
+   plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+% for i =  21:22
+%    disp(i);
+%    plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
+%    count = count + 1;
+% end
+
+
+xlim([0 3]);
+ylim([0 1.2]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$\eta_{d} = r/L_{d}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_20_60', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_20_60', '.eps'),'-depsc2','-r600');
+
 
 % Unnormalized profiles of <u_{x}u_{r}> at different x/D locations
 
@@ -294,25 +470,155 @@ hold on;
 C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
 color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
 
+lineStyles = maxdistcolor(9,@srgb_to_Jab);
 count = 1;
 
-Legend = cell(10,1);
-Legend{1} = 'x/D = 10';
-Legend{2} = 'x/D = 20';
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 25';
 Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 40';
-Legend{5} = 'x/D = 50';
-Legend{6} = 'x/D = 60';
-Legend{7} = 'x/D = 70';
-Legend{8} = 'x/D = 80';
-Legend{9} = 'x/D = 90';
-Legend{10} = 'x/D = 100';
+Legend{4} = 'x/D = 35';
+Legend{5} = 'x/D = 40';
+Legend{6} = 'x/D = 45';
+Legend{7} = 'x/D = 50';
+Legend{8} = 'x/D = 55';
+Legend{9} = 'x/D = 60';
+
+count = 1;
+for i = 4:12
+   disp(i);
+   plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+% for i =  21:22
+%    disp(i);
+%    plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
+%    count = count + 1;
+% end
+
+xlim([0 3]);
+ylim([0 1.2]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$\eta_{k} = r/L_{k}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_20_60', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_20_60', '.eps'),'-depsc2','-r600');
+
+%% Similarity profiles of <u_{x}u_{r}> at different x/D locations using defect velocity wake width
+
+close all;
+
+load('./files/similarity_uxur.mat');
+reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
+reystress_uw_1d = reystress_uw_1d_smooth;
+
+figure; 
+hold on;
+C = {'-','-','-','-','-','-','-','-','-','-'}; % Cell array of linestyle
+color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+
+%lineStyles = linspecer(10);
+lineStyles = maxdistcolor(9,@srgb_to_Jab);
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 70';
+Legend{2} = 'x/D = 75';
+Legend{3} = 'x/D = 80';
+Legend{4} = 'x/D = 85';
+Legend{5} = 'x/D = 90';
+Legend{6} = 'x/D = 95';
+Legend{7} = 'x/D = 100';
+Legend{8} = 'x/D = 110';
+Legend{9} = 'x/D = 120';
 
 
 count = 1;
-for i = 2:2:20
+
+for i = 14:20
    disp(i);
-   plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), C{count}, 'Color', color{count}, 'Linewidth',2);
+   plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i =  21:22
+   disp(i);
+   plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+
+xlim([0 3]);
+ylim([0 1.2]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$\eta_{d}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_70_120', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_70_120', '.eps'),'-depsc2','-r600');
+
+
+% Unnormalized profiles of <u_{x}u_{r}> at different x/D locations
+
+figure; 
+hold on;
+C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
+color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+
+lineStyles = maxdistcolor(9,@srgb_to_Jab);
+count = 1;
+
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 70';
+Legend{2} = 'x/D = 75';
+Legend{3} = 'x/D = 80';
+Legend{4} = 'x/D = 85';
+Legend{5} = 'x/D = 90';
+Legend{6} = 'x/D = 95';
+Legend{7} = 'x/D = 100';
+Legend{8} = 'x/D = 110';
+Legend{9} = 'x/D = 120';
+
+count = 1;
+for i = 14:20
+   disp(i);
+   plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i =  21:22
+   disp(i);
+   plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
    count = count + 1;
 end
 
@@ -324,8 +630,8 @@ ax.FontSize = 16;
 
 box on;
 
-hXLabel = xlabel('$r/L_{k}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('-$<u_{x}u_{r}>$/max($<u_{x}u_{r}>_{r}$)','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\eta_{k}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -334,37 +640,47 @@ hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
 set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk', '.eps'),'-depsc2','-r600');
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_70_120', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_70_120', '.eps'),'-depsc2','-r600');
 
-close;
+%% Similarity profiles of <u_{x}u_{r}> at different x/D locations using D
 
-% Similarity profiles of <u_{x}u_{r}> at different x/D locations using tke wake width
+close all;
+
+load('./files/similarity_uxur.mat');
+reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
+reystress_uw_1d = reystress_uw_1d_smooth;
 
 figure; 
 hold on;
-C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
-color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+%C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
+%color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
 
+lineStyles = maxdistcolor(11,@srgb_to_Jab);
 count = 1;
 
-Legend = cell(10,1);
-Legend{1} = 'x/D = 10';
-Legend{2} = 'x/D = 20';
-Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 40';
-Legend{5} = 'x/D = 50';
-Legend{6} = 'x/D = 60';
-Legend{7} = 'x/D = 70';
-Legend{8} = 'x/D = 80';
-Legend{9} = 'x/D = 90';
-Legend{10} = 'x/D = 100';
+Legend = cell(11,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
+Legend{10} = 'x/D = 110';
+Legend{11} = 'x/D = 120';
 
-
-count = 1;
-for i = 2:2:20
+for i =  4:2:20
    disp(i);
-   plot(rc, -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), C{count}, 'Color', color{count}, 'Linewidth',2);
+   plot(rc, -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i =  21:22
+   disp(i);
+   plot(rc, -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
    count = count + 1;
 end
 
@@ -377,7 +693,70 @@ ax.FontSize = 16;
 box on;
 
 hXLabel = xlabel('$r/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('-$<u_{x}u_{r}>$/max($<u_{x}u_{r}>_{r}$)','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 12;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'unnormalized_uxur_x_D_20_120', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'unnormalized_uxur_x_D_20_120', '.eps'),'-depsc2','-r600');
+
+
+%% Similarity profiles of <K> at different x/D locations using defect velocity wake width
+
+close all;
+
+load('./files/similarity_tke.mat');
+
+figure; 
+hold on;
+C = {'-','-','-','-','-','-','-','-','-','-'}; % Cell array of linestyle
+color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+
+%lineStyles = linspecer(10);
+lineStyles = maxdistcolor(11,@srgb_to_Jab);
+count = 1;
+
+Legend = cell(11,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
+Legend{10} = 'x/D = 110';
+Legend{11} = 'x/D = 120';
+
+count = 1;
+for i = 4:2:20
+   disp(i);
+   plot(rc/LK_mean_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i =  21:22
+   disp(i);
+   plot(rc/LK_mean_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+xlim([0.05 3]);
+ylim([0 1.2]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$\eta_{d} = r/L_{d}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',15);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -386,12 +765,210 @@ hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
 set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'unnormalized_uxur_x_D', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'unnormalized_uxur_x_D', '.eps'),'-depsc2','-r600');
-
-close;
+print(gcf,strcat(dirout, 'similarity_k_x_D_ld', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_k_x_D_ld', '.eps'),'-depsc2','-r600');
 
 
+% Unnormalized profiles of <u_{x}u_{r}> at different x/D locations
+
+figure; 
+hold on;
+C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
+color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+
+lineStyles = maxdistcolor(11,@srgb_to_Jab);
+count = 1;
+
+Legend = cell(11,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
+Legend{10} = 'x/D = 110';
+Legend{11} = 'x/D = 120';
+
+
+count = 1;
+for i = 4:2:20
+   disp(i);
+   plot(rc/LK_TKE_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i =  21:22
+   disp(i);
+   plot(rc/LK_TKE_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+xlim([0.05 3]);
+ylim([0 1.2]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$\eta_{k} = r/L_{k}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'similarity_k_x_D_lk', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_k_x_D_lk', '.eps'),'-depsc2','-r600');
+
+
+% Similarity profiles of <u_{x}u_{r}> at different x/D locations using tke wake width
+
+figure; 
+hold on;
+C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
+color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+
+lineStyles = maxdistcolor(11,@srgb_to_Jab);
+count = 1;
+
+Legend = cell(11,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 30';
+Legend{3} = 'x/D = 40';
+Legend{4} = 'x/D = 50';
+Legend{5} = 'x/D = 60';
+Legend{6} = 'x/D = 70';
+Legend{7} = 'x/D = 80';
+Legend{8} = 'x/D = 90';
+Legend{9} = 'x/D = 100';
+Legend{10} = 'x/D = 110';
+Legend{11} = 'x/D = 120';
+
+
+for i = 4:2:20
+   disp(i);
+   plot(rc, tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i =  21:22
+   disp(i);
+   plot(rc, tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+
+xlim([0.05 10]);
+ylim([0 1.2]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$r/D$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'unnormalized_k_x_D', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'unnormalized_k_x_D', '.eps'),'-depsc2','-r600');
+
+%% Scaling of <uxur> as a function of x/D
+
+close all;
+
+load('./files/similarity_uxur.mat');
+reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
+reystress_uw_1d = reystress_uw_1d_smooth;
+
+max_uw = zeros(size(reystress_uw_1d,2),1);
+for i = 1:size(reystress_uw_1d,2)
+    max_uw(i,1) = max(abs(reystress_uw_1d(:,i)));
+end
+
+loc = LK_mean_loc_planes(4:22,1);                         
+log_max_uw = log(max_uw(4:22,1));
+log_loc =  log(loc);
+[coeffs, S] = polyfit(log_loc, log_max_uw, 1);
+y_fitted = polyval(coeffs, log_loc);
+
+h1 = loglog(LK_mean_loc_planes(:,1), max_uw, 'ko');
+hold on;
+y1 = 0.15*LK_mean_loc_planes(6:12,1).^(coeffs(1));
+h5 = loglog(LK_mean_loc_planes(6:12,1),y1, 'k-', 'Linewidth', 2);
+h6 = text(45, 0.0008,'$x^{-1.52}$','interpreter','latex','FontSize', 12);
+
+xlim([0 125]);
+xticks([0 1 10 100]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('max$(-\langle u_{x}u_{r} \rangle)_{r}$','interpreter','latex','fontsize',15);
+
+set(gcf, 'PaperPositionMode', 'auto');
+print(gcf,strcat(dirout, 'scaling_uxur_x_D', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'scaling_uxur_x_D', '.eps'),'-depsc2','-r600');
+
+%% Scaling of spread of <uxur> as a function of x/D
+
+close all;
+
+load('./files/similarity_uxur.mat');
+reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
+reystress_uw_1d = reystress_uw_1d_smooth;
+
+loc_uw = zeros(size(reystress_uw_1d,2),1);
+
+for i = 1:size(reystress_uw_1d,2)
+   rs = -reystress_uw_1d(:,i)./max(-reystress_uw_1d(:,i));
+   [val2, idx_1]  = min(abs(rs-1));
+   [val1, idx_05] = min(abs(rs(idx_1:end)-0.5));
+   disp(idx_05+idx_1-1);
+   loc_uw(i,1) = rc(idx_05+idx_1-1);
+end
+
+loc = LK_mean_loc_planes(14:22,1);                         
+log_max_uw = log(loc_uw(14:22));
+log_loc =  log(loc);
+[coeffs, S] = polyfit(log_loc, log_max_uw, 1);
+y_fitted = polyval(coeffs, log_loc);
+
+h1 = loglog(LK_mean_loc_planes(:,1), loc_uw, 'ko');
+% hold on;
+% y1 = 0.15*LK_mean_loc_planes(6:12,1).^(coeffs(1));
+% h5 = loglog(LK_mean_loc_planes(6:12,1),y1, 'k-', 'Linewidth', 2);
+% h6 = text(45, 0.0008,'$x^{-1.52}$','interpreter','latex','FontSize', 12);
+
+xlim([1 125]);
+xticks([0 1 10 100]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('max$(-\langle u_{x}u_{r} \rangle)_{r}$','interpreter','latex','fontsize',15);
+
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'scaling_uxur_x_D', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'scaling_uxur_x_D', '.eps'),'-depsc2','-r600');  
 
 %% Scaling of <uxur> with different quantities
 
@@ -399,12 +976,13 @@ close all;
 
 load('./files/scaling_uxur.mat');
 
-% Scaling with defect velocity
+%% Scaling with defect velocity
 figure; 
 hold on;
 C = {'-','-','-','-','--','--','--','--'}; % Cell array of linestyle
 color = {'k','b','r','g','g','r','b','k'}; % Cell array of linestyle
 
+lineStyles = maxdistcolor(11,@srgb_to_Jab);
 count = 1;
 
 Legend = cell(8,1);
@@ -420,7 +998,7 @@ Legend{8} = 'x/D = 100';
 count = 1;
 for i = 6:2:20
    disp(i);
-   plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d_Ud(1:nr,i), C{count}, 'Color', color{count}, 'Linewidth',2);
+   plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d_Ud(1:nr,i), 'Color', color{count}, 'Linewidth',2);
    count = count + 1;
 end
 
@@ -445,28 +1023,37 @@ hLegend.Position = [0 0 1 1];
 % print(gcf,strcat(dirout, 'normalizedud_uxur_x_D', '.png'),'-dpng2','-r600');  
 % print(gcf,strcat(dirout, 'normalizedud_uxur_x_D', '.eps'),'-depsc2','-r600');
 
-% Scaling with TKE
+%% Scaling with TKE
 figure; 
 hold on;
-C = {'-','-','-','-','--','--','--','--'}; % Cell array of linestyle
-color = {'k','b','r','g','g','r','b','k'}; % Cell array of linestyle
 
+% C = {'-','-','-','-','--','--','--','--'}; % Cell array of linestyle
+% color = {'k','b','r','g','g','r','b','k'}; % Cell array of linestyle
+
+lineStyles = maxdistcolor(9,@srgb_to_Jab);
 count = 1;
 
-Legend = cell(8,1);
-Legend{1} = 'x/D = 30';
-Legend{2} = 'x/D = 40';
-Legend{3} = 'x/D = 50';
-Legend{4} = 'x/D = 60';
-Legend{5} = 'x/D = 70';
-Legend{6} = 'x/D = 80';
-Legend{7} = 'x/D = 90';
-Legend{8} = 'x/D = 100';
+Legend = cell(9,1);
+Legend{1} = 'x/D = 70';
+Legend{2} = 'x/D = 75';
+Legend{3} = 'x/D = 80';
+Legend{4} = 'x/D = 85';
+Legend{5} = 'x/D = 90';
+Legend{6} = 'x/D = 95';
+Legend{7} = 'x/D = 100';
+Legend{8} = 'x/D = 110';
+Legend{9} = 'x/D = 120';
 
 count = 1;
-for i = 6:2:20
+for i = 14:20
    disp(i);
-   plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d_tke(1:nr,i), C{count}, 'Color', color{count}, 'Linewidth',2);
+   plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d_tke(1:nr,i), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i = 21:22
+   disp(i);
+   plot(rc/LK_TKE_loc_planes(i,2), -reystress_uw_1d_tke(1:nr,i), 'Color', lineStyles(count,:), 'Linewidth',2);
    count = count + 1;
 end
 
@@ -479,7 +1066,7 @@ ax.FontSize = 16;
 box on;
 
 hXLabel = xlabel('$r/L_{k}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('-$<u_{x}u_{r}>$/$K$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('-$<u_{x}u_{r}>$/$K_{o}$','interpreter','latex','fontsize',15);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -491,7 +1078,57 @@ hLegend.Position = [0 0 1 1];
 % print(gcf,strcat(dirout, 'normalizedtke_uxur_x_D', '.png'),'-dpng2','-r600');  
 % print(gcf,strcat(dirout, 'normalizedtke_uxur_x_D', '.eps'),'-depsc2','-r600');
 
-% Scaling with Kddelta/dx
+%% Scaling with Udddelta/dx
+figure; 
+hold on;
+
+% C = {'-','-','-','-','--','--','--','--'}; % Cell array of linestyle
+% color = {'k','b','r','g','g','r','b','k'}; % Cell array of linestyle
+
+lineStyles = maxdistcolor(9,@srgb_to_Jab);
+count = 1;
+
+Legend = cell(9,1);
+Legend{1} = 'x/D = 20';
+Legend{2} = 'x/D = 25';
+Legend{3} = 'x/D = 30';
+Legend{4} = 'x/D = 35';
+Legend{5} = 'x/D = 40';
+Legend{6} = 'x/D = 45';
+Legend{7} = 'x/D = 50';
+Legend{8} = 'x/D = 55';
+Legend{9} = 'x/D = 60';
+
+count = 1;
+for i = 4:12
+   disp(i);
+   plot(rc/LK_mean_loc_planes(i,2), -reystress_uw_1d_udddelta_dx(1:nr,i), 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+
+xlim([0 4]);
+ylim([0 0.8]);
+
+ax = gca;
+ax.FontSize = 16; 
+
+box on;
+
+hXLabel = xlabel('$r/L_{d}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('-$<u_{x}u_{r}>$/$K_{o}$','interpreter','latex','fontsize',15);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'normalizedtke_uxur_x_D', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'normalizedtke_uxur_x_D', '.eps'),'-depsc2','-r600');
+
+%% Scaling with Kddelta/dx
 figure; 
 hold on;
 C = {'-','-','-','-','--','--','--','--'}; % Cell array of linestyle

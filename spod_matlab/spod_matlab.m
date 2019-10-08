@@ -4,7 +4,7 @@
 clear; clc;
 %% Reading the datafiles of u_x velocity field
 
-var = 'vp';
+var = 'up';
 loc = '80';
 nstart = 1892600;
 nend   = 2613200;
