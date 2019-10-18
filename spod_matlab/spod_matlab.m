@@ -2,7 +2,7 @@
 %  This code is used to compare the spod_fortran code with MATLAB implementation
 
 clear; clc;
-%% Reading the datafiles of u_x velocity field
+% Reading the datafiles of u_x velocity field
 
 var = 'up';
 loc = '80';
