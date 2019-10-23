@@ -5,9 +5,14 @@
 % dirout = '/home/sheel/Dropbox/research/sheel_papers/prf_spod_re5e4_frinf/template/figures/';
 dirout = '/home/sheel/Dropbox/research/sheel_papers/prf_spod_re5e4_frinf/template/figures_2.0/';
 
-%% Figure 1 - Plotting the defect velocity and wake width based on that as a function of x/D
 
-close all;
+%% Plotting the defect velocity as a function of x/D
+
+close;
+
+filename = './files/Defect_centerline.dat';
+udefect  = importdata(filename);
+
 figure;
 x0=5;
 y0=5;
@@ -15,20 +20,9 @@ width=15;
 height=5;
 set(gcf, 'units', 'inches', 'position',[x0,y0,width,height])
 
-[ha, pos] = tight_subplot(1,2,.08,[.2,.05],[.08 .02]);
+ha = tight_subplot(1,2,.1,[.1 .1],[.1 .1])
 
-% Plotting the defect velocity as a function of x/D
-
-filename = './files/Defect_centerline.dat';
-udefect  = importdata(filename);
-
-loc = udefect(33:end,1);                         
-log_max_uw = log(udefect(33:end,2));
-log_loc =  log(loc);
-[coeffs, S] = polyfit(log_loc, log_max_uw, 1);
-y_fitted = polyval(coeffs, log_loc);
-
-axes(ha(1));
+s1 = subplot(1,2,1);
 
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(groot,'defaulttextinterpreter','latex');
@@ -40,31 +34,55 @@ y1 = 0.5*udefect(10:25,1).^(-0.9);
 h2 = loglog(udefect(10:25,1),y1, 'k-', 'Linewidth', 2);
 y2 = 0.25*udefect(30:43,1).^(-0.6);
 h3 = loglog(udefect(30:43,1),y2, 'r-', 'Linewidth', 2);
-h4=text(10, 0.02,'$x^{-0.9}$','interpreter','latex','FontSize', 20);
-h5=text(65, 0.025,'$x^{-0.6}$','interpreter','latex','FontSize', 20);
+h4=text(10, 0.02,'$x^{-0.9}$','interpreter','latex','FontSize', 15);
+h5=text(65, 0.025,'$x^{-0.6}$','interpreter','latex','FontSize', 15);
+
 
 xlim([0 125]);
 xticks([1 10 100]);
 
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',25);
-hYLabel = ylabel('$U_{d}$','interpreter','latex','fontsize',25,'Units', 'normalized', 'Position', [-0.10, 0.5, 0]);
-hTitle  = title('(a)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.12, 0.95, 0]);
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',20);
+hYLabel = ylabel('$U_{d}$','interpreter','latex','fontsize',20,'Units', 'normalized', 'Position', [-0.15, 0.5, 0]);
+hTitle  = title('(a)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.2, 0.95, 0]);
 
 ax = gca;
 ax.FontSize = 20; 
 
-% Plotting the wake width as a function of x/D
+% outerpos = ax.OuterPosition;
+% ti = ax.TightInset; 
+% left = outerpos(1) + ti(1);
+% bottom = outerpos(2) + ti(2);
+% ax_width = outerpos(3) - ti(1) - ti(3);
+% ax_height = outerpos(4) - ti(2) - ti(4);
+% ax.Position = [left bottom ax_width ax_height];
+% 
+% 
+% %set(gcf, 'PaperPositionMode', 'auto', 'PaperUnits', 'Inches', 'PaperSize', [4, 4]);
+% 
+% fig = gcf;
+% fig.PaperPositionMode = 'auto';
+% fig_pos = fig.PaperPosition;
+% fig.PaperSize = [fig_pos(3) fig_pos(4)];
 
-filename = './files/Half_length_zwhazi_WMEAN.dat';
-wake_width  = importdata(filename);
+%print(gcf,strcat(dirout, 'udefect_x_D.png'),'-dpng2','-r600');  
+%print(gcf,strcat(dirout, 'udefect_x_D.eps'),'-depsc2','-r600');
 
-loc = wake_width(33:end,1);                         
-log_max_uw = log(wake_width(33:end,2));
+
+
+loc = udefect(33:end,1);                         
+log_max_uw = log(udefect(33:end,2));
 log_loc =  log(loc);
 [coeffs, S] = polyfit(log_loc, log_max_uw, 1);
 y_fitted = polyval(coeffs, log_loc);
 
-axes(ha(2));
+% Plotting the wake width as a function of x/D
+
+
+filename = './files/Half_length_zwhazi_WMEAN.dat';
+
+wake_width  = importdata(filename);
+
+s2 = subplot(1,2,2);
 
 set(groot,'defaultAxesTickLabelInterpreter','latex');  
 set(groot,'defaulttextinterpreter','latex');
@@ -76,8 +94,8 @@ y1 = 0.35*wake_width(10:25,1).^(0.45);
 h2 = loglog(wake_width(10:25,1),y1, 'k-', 'Linewidth', 2);
 y2 = 0.68*wake_width(30:43,1).^(0.3);
 h3 = loglog(wake_width(30:43,1),y2, 'r-', 'Linewidth', 2);
-h4=text(20, 1.3,'$x^{0.45}$','interpreter','latex','FontSize', 20);
-h5=text(75, 2.4,'$x^{0.3}$','interpreter','latex','FontSize', 20);
+h4=text(20, 1.3,'$x^{0.45}$','interpreter','latex','FontSize', 15);
+h5=text(75, 2.4,'$x^{0.3}$','interpreter','latex','FontSize', 15);
 
 xlim([0 125]);
 xticks([1 10 100]);
@@ -87,11 +105,35 @@ yticks([0.5 1 2  3 4]);
 ax = gca;
 ax.FontSize = 20; 
 
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',25);
-hYLabel = ylabel('$L_{d}$','interpreter','latex','fontsize',25,'Units', 'normalized', 'Position', [-0.10, 0.5, 0]);
-hTitle  = title('(b)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.12, 0.95, 0]);
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',20);
+hYLabel = ylabel('$L_{d}$','interpreter','latex','fontsize',20,'Units', 'normalized', 'Position', [-0.15, 0.5, 0]);
+hTitle  = title('(b)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.2, 0.95, 0]);
 
-set(gcf, 'PaperPositionMode', 'auto');
+
+% set(gcf, 'PaperPositionMode', 'auto');
+%print(gcf,strcat(dirout, 'ldefect_x_D.png'),'-dpng2','-r600');  
+%print(gcf,strcat(dirout, 'ldefect_x_D.eps'),'-depsc2','-r600');
+
+% s1.Units = 'inches';
+% s2.Units = 'inches';
+
+% s1_position = s1.Position; s2_position = s2.Position;
+
+% disp(s1.Position); disp(s2.Position);
+
+% set(s1, 'Position', [s1_position(1), s2_position(2), 3, 4]);
+% set(s2, 'Position', [s2_position(1), s2_position(2), 3, 4]);
+
+% disp(s1.Position); disp(s2.Position);
+
+loc = wake_width(33:end,1);                         
+log_max_uw = log(wake_width(33:end,2));
+log_loc =  log(loc);
+[coeffs, S] = polyfit(log_loc, log_max_uw, 1);
+y_fitted = polyval(coeffs, log_loc);
+
+%%
+%set(gcf, 'PaperPositionMode', 'auto');
 print(gcf,strcat(dirout, 'udefect_ldefect_x_D.png'),'-dpng2','-r600');  
 print(gcf,strcat(dirout, 'udefect_ldefect_x_D.eps'),'-depsc2','-r600');
 

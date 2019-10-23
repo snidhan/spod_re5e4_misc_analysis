@@ -26,7 +26,7 @@
 % - Colors are defined in colormap
 % - Treat this function as a standard contour plot
 
-function [C,h] = polarcont(r,theta,z,N,s)
+function [C,h,x,y] = polarcont(r,theta,z,N,s)
 
 [a,b] = size(z);
 
@@ -49,11 +49,11 @@ for j = 1:a
 end
 
 if nargin == 3
-    [C,h] = contourf(x,y,z, 'edgecolor','none');
+    [C,h] = contourf(x,y,z);
 elseif nargin == 4
-    [C,h] = contourf(x,y,z,N, 'edgecolor','none');
+    [C,h] = contourf(x,y,z,N);
 elseif nargin == 5
-    [C,h] = contourf(x,y,z,N,s, 'edgecolor','none');
+    [C,h] = contourf(x,y,z,N,s);
 else
     error('Incorrect number of inputs')
 end

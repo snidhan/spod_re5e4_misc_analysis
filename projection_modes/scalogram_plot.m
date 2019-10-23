@@ -79,7 +79,7 @@ figure;
 %% Plotting the turbulent fluctuation
 
 
-t = 111;
+t = 5131;
 
 [C,h,x,y] = polarcont(rc, theta, w_fluc_sampled(:,:,t), 10);
 axis equal;
