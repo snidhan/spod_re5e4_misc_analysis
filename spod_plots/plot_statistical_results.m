@@ -4,7 +4,7 @@
 
 % dirout = '/home/sheel/Dropbox/research/sheel_papers/prf_spod_re5e4_frinf/template/figures/';
 dirout = '/home/sheel/Dropbox/research/sheel_papers/prf_spod_re5e4_frinf/template/figures_2.0/';
-
+% dirout = 'C:\Users\snidh\Dropbox\research\sheel_papers\prf_spod_re5e4_frinf\template\figures_2.0\';
 %% Figure 1 - Plotting the defect velocity and wake width based on that as a function of x/D
 
 close all;
@@ -15,7 +15,7 @@ width=15;
 height=5;
 set(gcf, 'units', 'inches', 'position',[x0,y0,width,height])
 
-[ha, pos] = tight_subplot(1,2,.08,[.2,.05],[.08 .02]);
+[ha, pos] = tight_subplot(1,2,.1,[.2,.05],[.08 .02]);
 
 % Plotting the defect velocity as a function of x/D
 
@@ -40,15 +40,15 @@ y1 = 0.5*udefect(10:25,1).^(-0.9);
 h2 = loglog(udefect(10:25,1),y1, 'k-', 'Linewidth', 2);
 y2 = 0.25*udefect(30:43,1).^(-0.6);
 h3 = loglog(udefect(30:43,1),y2, 'r-', 'Linewidth', 2);
-h4=text(10, 0.02,'$x^{-0.9}$','interpreter','latex','FontSize', 20);
+h4=text(10, 0.029,'$x^{-0.9}$','interpreter','latex','FontSize', 20);
 h5=text(65, 0.025,'$x^{-0.6}$','interpreter','latex','FontSize', 20);
 
 xlim([0 125]);
 xticks([1 10 100]);
 
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',25);
-hYLabel = ylabel('$U_{d}$','interpreter','latex','fontsize',25,'Units', 'normalized', 'Position', [-0.10, 0.5, 0]);
-hTitle  = title('(a)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.12, 0.95, 0]);
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',20);
+hYLabel = ylabel('$U_{d}$','interpreter','latex','fontsize',20,'Units', 'normalized', 'Position', [-0.1, 0.5, 0]);
+hTitle  = title('(a)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.95, 0]);
 
 ax = gca;
 ax.FontSize = 20; 
@@ -77,7 +77,7 @@ h2 = loglog(wake_width(10:25,1),y1, 'k-', 'Linewidth', 2);
 y2 = 0.68*wake_width(30:43,1).^(0.3);
 h3 = loglog(wake_width(30:43,1),y2, 'r-', 'Linewidth', 2);
 h4=text(20, 1.3,'$x^{0.45}$','interpreter','latex','FontSize', 20);
-h5=text(75, 2.4,'$x^{0.3}$','interpreter','latex','FontSize', 20);
+h5=text(75, 2.35,'$x^{0.3}$','interpreter','latex','FontSize', 20);
 
 xlim([0 125]);
 xticks([1 10 100]);
@@ -87,17 +87,27 @@ yticks([0.5 1 2  3 4]);
 ax = gca;
 ax.FontSize = 20; 
 
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',25);
-hYLabel = ylabel('$L_{d}$','interpreter','latex','fontsize',25,'Units', 'normalized', 'Position', [-0.10, 0.5, 0]);
-hTitle  = title('(b)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.12, 0.95, 0]);
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',20);
+hYLabel = ylabel('$L_{d}$','interpreter','latex','fontsize',20,'Units', 'normalized', 'Position', [-0.1, 0.5, 0]);
+hTitle  = title('(b)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.95, 0]);
 
 set(gcf, 'PaperPositionMode', 'auto');
 print(gcf,strcat(dirout, 'udefect_ldefect_x_D.png'),'-dpng2','-r600');  
 print(gcf,strcat(dirout, 'udefect_ldefect_x_D.eps'),'-depsc2','-r600');
 
-%% Plotting centerline turbulent quantities as a function of x/D
 
-close;
+%% Figure 2 - Plotting centerline turbulent quantities and L_{k} as a function of x/D
+
+close all;
+figure;
+x0=5;
+y0=5;
+width=15;
+height=5;
+set(gcf, 'units', 'inches', 'position',[x0,y0,width,height])
+
+[ha, pos] = tight_subplot(1,2,.1,[.2,.05],[.08 .02]);
+
 
 filename = './files/UZ_rms_centerline.dat';
 uz_rms   = importdata(filename);
@@ -116,40 +126,38 @@ set(groot,'defaultAxesTickLabelInterpreter','latex');
 set(groot,'defaulttextinterpreter','latex');
 set(groot,'defaultLegendInterpreter','latex');
 
+axes(ha(1));
 
 h1 = loglog(ux_rms(:,1), ux_rms(:,2), 'bs');
 hold on;
 h2 = loglog(uy_rms(:,1), uy_rms(:,2), 'rd');
 h3 = loglog(uz_rms(:,1), uz_rms(:,2), 'gv');
 h4 = loglog(tke_centerline(:,1), tke_centerline(:,2).^0.5, 'ko');
-y1 = 0.3*wake_width(10:25,1).^(-2/3);
-h5 = loglog(wake_width(10:25,1),y1, 'k-', 'Linewidth', 2);
-h6 = text(15, 0.030,'$x^{-2/3}$','interpreter','latex','FontSize', 12);
+y1 = 0.3*uy_rms(10:25,1).^(-2/3);
+h5 = loglog(uy_rms(10:25,1),y1, 'k-', 'Linewidth', 2);
+h6 = text(15, 0.030,'$x^{-2/3}$','interpreter','latex','FontSize', 20);
 
 xlim([0 125]);
 xticks([1 10 100]);
 ax = gca;
-ax.FontSize = 16; 
+ax.FontSize = 20; 
 
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$K^{1/2}$, $u_{x}^{''}$, $u_{y}^{''}$, $u_{z}^{''}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',20);
+hYLabel = ylabel('$K_{o}^{1/2}$','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.5, 0] );
+hTitle  = title('(a)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.95, 0]);
 
-
-hLegend = legend([h1,h2,h3,h4], '$u_{x}^{''}$', '$u_{y}^{''}$', '$u_{z}^{''}$', '$K^{1/2}$');
+hLegend = legend([h1,h2,h3,h4], '$\langle u_{x}^{''}u_{x}^{''} \rangle^{1/2}_{r=0}$', '$\langle u_{y}^{''}u_{y}^{''} \rangle^{1/2}_{r=0}$', ...
+    '$\langle u_{z}^{''}u_{z}^{''} \rangle^{1/2}_{r=0}$', '$K_{o}^{1/2}$');
 hLegend.Interpreter = 'Latex';
 hLegend.FontSize = 15;
 hLegend.FontWeight = 'bold';
-hLegend.Position = [0 0 1 1];
+% hLegend.Position = [0 0 1 1];
+hLegend.Location = 'southwest';
 
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'turbcenterline_x_D.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'turbcenterline_x_D.eps'),'-depsc2','-r600');
+% Plotting the TKE wake width as a function of x/D
 
-%% Plotting the TKE wake width as a function of x/D
+axes(ha(2));
 
-close;
-
-dirout = '/home/sheel/Dropbox/research/sheel_papers/prf_spod_re5e4_frinf/template/figures/';
 filename = './files/Half_length_zwhazi_TKE.dat';
 
 tke_wake_width  = importdata(filename);
@@ -160,27 +168,26 @@ set(groot,'defaultLegendInterpreter','latex');
 
 h1 = loglog(tke_wake_width(:,1), tke_wake_width(:,4), 'ko');
 hold on;
-y1 = 0.68*wake_width(15:40,1).^(1/3);
-h2 = loglog(wake_width(15:40,1),y1, 'k-', 'Linewidth', 2);
-h3=text(50, 2.4,'$x^{1/3}$','interpreter','latex','FontSize', 12);
+y1 = 0.68*tke_wake_width(15:40,1).^(1/3);
+h2 = loglog(tke_wake_width(15:40,1),y1, 'k-', 'Linewidth', 2);
+h3=text(50, 2.4,'$x^{1/3}$','interpreter','latex','FontSize', 20);
 
+ax = gca;
+ax.FontSize = 20; 
 xlim([0 125]);
 xticks([1 10 100]);
 ylim([0.5 4]);
 yticks([0.5 1 2  3 4]);
 
-ax = gca;
-ax.FontSize = 16; 
-
-
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15); %#ok<*NASGU>
-hYLabel = ylabel('$L_{k}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',20); %#ok<*NASGU>
+hYLabel = ylabel('$L_{k}$','interpreter','latex','fontsize',20,'Units', 'normalized', 'Position', [-0.1, 0.5, 0]);
+hTitle  = title('(b)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.95, 0]);
 
 set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'ltke_x_D.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'ltke_x_D.eps'),'-depsc2','-r600');
+print(gcf,strcat(dirout, 'k_ltke_x_D.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'k_ltke_x_D.eps'),'-depsc2','-r600');
 
-%% Plotting the ratio of K^1/2 and Udefect as a function of x/D
+%% Figure 3 - Plotting the ratio of K^1/2 and Udefect as a function of x/D
 
 close;
 
@@ -224,64 +231,61 @@ ylim([0 2.1]);
 yticks([0 0.3 0.6 0.9 1.2 1.5 1.8 2.1])
 
 ax = gca;
-ax.FontSize = 16; 
+ax.FontSize = 15; 
 
 box on;
 
 hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$K^{1/2}/U_{d}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$K_{o}^{1/2}/U_{d}$','interpreter','latex','fontsize',15);
 
+hLegend = legend([h1,h2,h3,h4], '$\langle u_{x}^{''}u_{x}^{''} \rangle^{1/2}_{r=0}/U_{d}$', ...
+    '$\langle u_{y}^{''}u_{y}^{''} \rangle^{1/2}_{r=0}/U_{d}$', ...
+    '$\langle u_{z}^{''}u_{z}^{''} \rangle^{1/2}_{r=0}/U_{d}$', ...
+    '$K_{o}^{1/2}/U_{d}$');
 
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('($K^{1/2}$, $u_{x}^{''}$, $u_{y}^{''}$, $u_{z}^{''}$)/$U_{d}$','interpreter','latex','fontsize',15);
-
-
-hLegend = legend([h1,h2,h3,h4], '$u_{x}^{''}/U_{d}$', '$u_{y}^{''}/U_{d}$', '$u_{z}^{''}/U_{d}$', '$K^{1/2}/U_{d}$');
 hLegend.Interpreter = 'Latex';
 hLegend.FontSize = 15;
 hLegend.FontWeight = 'bold';
 hLegend.Location = 'southeast';
 
-
 set(gcf, 'PaperPositionMode', 'auto');
 print(gcf,strcat(dirout, 'ratioturbud_x_D.png'),'-dpng2','-r600');  
 print(gcf,strcat(dirout, 'ratioturbud_x_D.eps'),'-depsc2','-r600');
 
+%% Plotting the ratio of L_{k} and L_{d} as a function of x/D
 
-%% Plotting the ratio of K^1/2 and Udefect as a function of x/D
+% close;
+% 
+% filename = './files/Half_length_zwhazi_WMEAN.dat';
+% LK_mean  = importdata(filename);
+% 
+% filename = './files/Half_length_zwhazi_TKE.dat';
+% LK_tke   = importdata(filename);
+% 
+% ratio = LK_tke(:,2)./LK_mean(:,2);
 
-close;
+% set(groot,'defaultAxesTickLabelInterpreter','latex');  
+% set(groot,'defaulttextinterpreter','latex');
+% set(groot,'defaultLegendInterpreter','latex');
+% 
+% h1 = plot(LK_mean(:,1), ratio, 'ko');
+% 
+% xlim([0 125]);
+% xticks([0 20 40 60 80 100 120]);
+% ylim([1 1.5]);
+% yticks([1 1.1 1.2 1.3 1.4 1.5])
+% 
+% ax = gca;
+% ax.FontSize = 16; 
 
-filename = './files/Half_length_zwhazi_WMEAN.dat';
-LK_mean  = importdata(filename);
-
-filename = './files/Half_length_zwhazi_TKE.dat';
-LK_tke   = importdata(filename);
-
-ratio = LK_tke(:,2)./LK_mean(:,2);
-
-set(groot,'defaultAxesTickLabelInterpreter','latex');  
-set(groot,'defaulttextinterpreter','latex');
-set(groot,'defaultLegendInterpreter','latex');
-
-h1 = plot(LK_mean(:,1), ratio, 'ko');
-
-xlim([0 125]);
-xticks([0 20 40 60 80 100 120]);
-ylim([1 1.5]);
-yticks([1 1.1 1.2 1.3 1.4 1.5])
-
-ax = gca;
-ax.FontSize = 16; 
-
-box on;
-
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$K^{1/2}/U_{d}$','interpreter','latex','fontsize',15);
-
-
-hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$L_{k}/L_{d}$','interpreter','latex','fontsize',15);
+% box on;
+% 
+% hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
+% hYLabel = ylabel('$K^{1/2}/U_{d}$','interpreter','latex','fontsize',15);
+% 
+% 
+% hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
+% hYLabel = ylabel('$L_{k}/L_{d}$','interpreter','latex','fontsize',15);
 
 
 % hLegend = legend([h1,h2,h3,h4], '$u_{x}^{''}/U_{d}$', '$u_{y}^{''}/U_{d}$', '$u_{z}^{''}/U_{d}$', '$K^{1/2}/U_{d}$');
@@ -291,115 +295,115 @@ hYLabel = ylabel('$L_{k}/L_{d}$','interpreter','latex','fontsize',15);
 % hLegend.Location = 'southeast';
 
 
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'ratiolkld_x_D.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'ratiolkld_x_D.eps'),'-depsc2','-r600');
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'ratiolkld_x_D.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'ratiolkld_x_D.eps'),'-depsc2','-r600');
 
 
 %% Similarity profiles of U at different x/D locations
 
-close;
+% close;
+% 
+% load('./files/similarity_w.mat');
+%  
+% figure;
+% 
+% hold on;
+% 
+% lineStyles = distinguishable_colors(9);
+% count = 1;
+% 
+% Legend = cell(9,1);
+% Legend{1} = 'x/D = 20';
+% Legend{2} = 'x/D = 25';
+% Legend{3} = 'x/D = 30';
+% Legend{4} = 'x/D = 35';
+% Legend{5} = 'x/D = 40';
+% Legend{6} = 'x/D = 45';
+% Legend{7} = 'x/D = 50';
+% Legend{8} = 'x/D = 55';
+% Legend{9} = 'x/D = 60';
+% 
+% count = 1;
+% for i = 4:12
+%    disp(i);
+%    plot(rc(1:nr)/LK_mean_loc_planes(i,2), (1-mean_w_1d(1:nr,i))/max(1-mean_w_1d(:,i)), 'Color', lineStyles(count,:), 'Linewidth',2);
+%    count = count + 1;
+% end
+% 
+% xlim([0 3]);
+% ylim([0 1.2]);
+% 
+% ax = gca;
+% ax.FontSize = 16; 
+% 
+% box on;
+% 
+% hXLabel = xlabel('$\eta = r/L_{d}$','interpreter','latex','fontsize',15);
+% hYLabel = ylabel('$f(\eta)$','interpreter','latex','fontsize',15);
+% 
+% hLegend = legend(Legend);
+% hLegend.Interpreter = 'Latex';
+% hLegend.FontSize = 15;
+% hLegend.FontWeight = 'bold';
+% hLegend.Position = [0 0 1 1];
+% 
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'similarity_w_x_D_ld_20_60', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'similarity_w_x_D_ld_20_60', '.eps'),'-depsc2','-r600');
+% 
+% % Unnormalized profiles of u at different x/D locations
+% 
+% figure; 
+% hold on;
+% 
+% lineStyles = distinguishable_colors(10);
+% count = 1;
+% 
+% count = 1;
+% 
+% Legend = cell(9,1);
+% Legend{1} = 'x/D = 20';
+% Legend{2} = 'x/D = 25';
+% Legend{3} = 'x/D = 30';
+% Legend{4} = 'x/D = 35';
+% Legend{5} = 'x/D = 40';
+% Legend{6} = 'x/D = 45';
+% Legend{7} = 'x/D = 50';
+% Legend{8} = 'x/D = 55';
+% Legend{9} = 'x/D = 60';
+% 
+% 
+% count = 1;
+% for i = 2:2:20
+%    disp(i);
+%    plot(rc(1:nr), (1-mean_w_1d(1:nr,i))/max(1-mean_w_1d(:,i)), 'Color', lineStyles(count,:), 'Linewidth',2);
+%    count = count + 1;
+% end
+% 
+% xlim([0 10]);
+% ylim([0 1.2]);
+% 
+% ax = gca;
+% ax.FontSize = 16; 
+% 
+% box on;
+% 
+% hXLabel = xlabel('$r$','interpreter','latex','fontsize',15);
+% hYLabel = ylabel('$f(\eta)$','interpreter','latex','fontsize',15);
+% 
+% hLegend = legend(Legend);
+% hLegend.Interpreter = 'Latex';
+% hLegend.FontSize = 15;
+% hLegend.FontWeight = 'bold';
+% hLegend.Position = [0 0 1 1];
+% 
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'unnormalized_w_x_D', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'unnormalized_w_x_D', '.eps'),'-depsc2','-r600');
 
-load('./files/similarity_w.mat');
- 
-figure;
 
-hold on;
-
-lineStyles = distinguishable_colors(9);
-count = 1;
-
-Legend = cell(9,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 25';
-Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 35';
-Legend{5} = 'x/D = 40';
-Legend{6} = 'x/D = 45';
-Legend{7} = 'x/D = 50';
-Legend{8} = 'x/D = 55';
-Legend{9} = 'x/D = 60';
-
-count = 1;
-for i = 4:12
-   disp(i);
-   plot(rc(1:nr)/LK_mean_loc_planes(i,2), (1-mean_w_1d(1:nr,i))/max(1-mean_w_1d(:,i)), 'Color', lineStyles(count,:), 'Linewidth',2);
-   count = count + 1;
-end
-
-xlim([0 3]);
-ylim([0 1.2]);
-
-ax = gca;
-ax.FontSize = 16; 
-
-box on;
-
-hXLabel = xlabel('$\eta = r/L_{d}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$f(\eta)$','interpreter','latex','fontsize',15);
-
-hLegend = legend(Legend);
-hLegend.Interpreter = 'Latex';
-hLegend.FontSize = 15;
-hLegend.FontWeight = 'bold';
-hLegend.Position = [0 0 1 1];
-
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_w_x_D_ld_20_60', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_w_x_D_ld_20_60', '.eps'),'-depsc2','-r600');
-
-% Unnormalized profiles of u at different x/D locations
-
-figure; 
-hold on;
-
-lineStyles = distinguishable_colors(10);
-count = 1;
-
-count = 1;
-
-Legend = cell(9,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 25';
-Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 35';
-Legend{5} = 'x/D = 40';
-Legend{6} = 'x/D = 45';
-Legend{7} = 'x/D = 50';
-Legend{8} = 'x/D = 55';
-Legend{9} = 'x/D = 60';
-
-
-count = 1;
-for i = 2:2:20
-   disp(i);
-   plot(rc(1:nr), (1-mean_w_1d(1:nr,i))/max(1-mean_w_1d(:,i)), 'Color', lineStyles(count,:), 'Linewidth',2);
-   count = count + 1;
-end
-
-xlim([0 10]);
-ylim([0 1.2]);
-
-ax = gca;
-ax.FontSize = 16; 
-
-box on;
-
-hXLabel = xlabel('$r$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$f(\eta)$','interpreter','latex','fontsize',15);
-
-hLegend = legend(Legend);
-hLegend.Interpreter = 'Latex';
-hLegend.FontSize = 15;
-hLegend.FontWeight = 'bold';
-hLegend.Position = [0 0 1 1];
-
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'unnormalized_w_x_D', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'unnormalized_w_x_D', '.eps'),'-depsc2','-r600');
-
-
-%% Similarity profiles of <u_{x}u_{r}> at different x/D locations using defect velocity wake width
+%% Figure 5: Similarity profiles of <u_{x}u_{r}> at different x/D locations using defect velocity wake width       
 
 close all;
 
@@ -407,7 +411,80 @@ load('./files/similarity_uxur.mat');
 reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
 reystress_uw_1d = reystress_uw_1d_smooth;
 
-figure; 
+x0=0;
+y0=0;
+width=15;
+height=15;
+set(gcf, 'units', 'inches', 'position',[x0,y0,width,height]);
+
+[ha, pos] = tight_subplot(3,2,[.05, 0.05],[.1,.05],[.1 .02]);
+new = mean(cellfun(@(v)v(1),pos(1:2)));
+set(ha(1),'Position',[new,pos{1}(2:end)])
+delete(ha(2));
+%% Plotting <u_x u_r> as a function of r/D from x/D = 20 to 120
+
+axes(ha(1));
+
+%C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
+%color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+
+lineStyles = maxdistcolor(11,@srgb_to_Jab);
+count = 1;
+
+Legend = cell(11,1);
+Legend{1} = '$x/D = 20$';
+Legend{2} = '$x/D = 30$';
+Legend{3} = '$x/D = 40$';
+Legend{4} = '$x/D = 50$';
+Legend{5} = '$x/D = 60$';
+Legend{6} = '$x/D = 70$';
+Legend{7} = '$x/D = 80$';
+Legend{8} = '$x/D = 90$';
+Legend{9} = '$x/D = 100$';
+Legend{10} = '$x/D = 110$';
+Legend{11} = '$x/D = 120$';
+
+hold on;
+for i =  4:2:20
+   disp(i);
+   plot(rc, -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+for i =  21:22
+   disp(i);
+   plot(rc, -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
+   count = count + 1;
+end
+
+ax = gca;
+ax.FontSize = 15;
+
+xlim([0 10]);
+xticks([0 2 4 6 8 10]);
+xticklabels({'0','2','4', '6', '8', '10'});
+
+ylim([0 1.2]);
+yticks([0 .2 .4 .6 .8 1]);
+yticklabels({'0','0.2','0.4', '0.6', '0.8', '1'});
+
+box on;
+
+hXLabel = xlabel('$r/D$','interpreter','latex','fontsize',15,'Units', 'normalized', 'Position', [0.5, -0.10, 0]);
+hYLabel = ylabel('$-\langle u_{x}''u_{r}''\rangle$/max$(-\langle u_{x}''u_{r}''\rangle)_{r}$','interpreter','latex','fontsize',15,...
+    'Units', 'normalized', 'Position', [-0.08, 0.45, 0]);
+hTitle  = title('(a)','interpreter','latex','fontsize', 15, 'Units', 'normalized', 'Position', [-0.08, 0.95, 0]);
+
+hLegend = legend(Legend);
+hLegend.Interpreter = 'Latex';
+hLegend.FontSize = 15;
+hLegend.FontWeight = 'bold';
+hLegend.Position = [0 0 1 1];
+
+%% Plotting <u_xu_r> as a function of r/Ld from x/D = 20 to 60
+
+axes(ha(3));
+
 hold on;
 C = {'-','-','-','-','-','-','-','-','-','-'}; % Cell array of linestyle
 color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
@@ -417,15 +494,15 @@ lineStyles = maxdistcolor(9,@srgb_to_Jab);
 count = 1;
 
 Legend = cell(9,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 25';
-Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 35';
-Legend{5} = 'x/D = 40';
-Legend{6} = 'x/D = 45';
-Legend{7} = 'x/D = 50';
-Legend{8} = 'x/D = 55';
-Legend{9} = 'x/D = 60';
+Legend{1} = '$x/D = 20$';
+Legend{2} = '$x/D = 25$';
+Legend{3} = '$x/D = 30$';
+Legend{4} = '$x/D = 35$';
+Legend{5} = '$x/D = 40$';
+Legend{6} = '$x/D = 45$';
+Legend{7} = '$x/D = 50$';
+Legend{8} = '$x/D = 55$';
+Legend{9} = '$x/D = 60$';
 
 count = 1;
 
@@ -441,17 +518,26 @@ end
 %    count = count + 1;
 % end
 
-
-xlim([0 3]);
-ylim([0 1.2]);
-
 ax = gca;
-ax.FontSize = 16; 
+ax.FontSize = 15;
+
+xlim([0 4]);
+xticks([0 1 2 3 4]);
+set(gca, 'Xticklabel', []);
+% xticks([0 1 2 3 4]);
+% xticklabels({'0','1','2', '3', '4'});
+ylim([0 1.2]);
+yticks([0 .2 .4 .6 .8 1]);
+yticklabels({'0','0.2','0.4', '0.6', '0.8', '1'});
 
 box on;
 
-hXLabel = xlabel('$\eta_{d} = r/L_{d}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+%hXLabel = xlabel('$\eta_{d} = r/L_{d}$','interpreter','latex','fontsize',15);
+% hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('$-\langle u_{x}''u_{r}''\rangle$/max$(-\langle u_{x}''u_{r}''\rangle)_{r}$','interpreter','latex','fontsize',15,...
+    'Units', 'normalized', 'Position', [-0.08, 0.45, 0]);
+hTitle  = title('(b)','interpreter','latex','fontsize', 15, 'Units', 'normalized', 'Position', [-0.08, 0.95, 0]);
+
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -459,14 +545,15 @@ hLegend.FontSize = 15;
 hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_20_60', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_20_60', '.eps'),'-depsc2','-r600');
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_20_60', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_20_60', '.eps'),'-depsc2','-r600');
 
 
-% Unnormalized profiles of <u_{x}u_{r}> at different x/D locations
+%% Plotting <u_xu_r> as a function of r/Lk from x/D = 20 to 60
 
-figure; 
+axes(ha(4));
+
 hold on;
 C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
 color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
@@ -474,18 +561,16 @@ color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
 lineStyles = maxdistcolor(9,@srgb_to_Jab);
 count = 1;
 
-count = 1;
-
 Legend = cell(9,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 25';
-Legend{3} = 'x/D = 30';
-Legend{4} = 'x/D = 35';
-Legend{5} = 'x/D = 40';
-Legend{6} = 'x/D = 45';
-Legend{7} = 'x/D = 50';
-Legend{8} = 'x/D = 55';
-Legend{9} = 'x/D = 60';
+Legend{1} = '$x/D = 20$';
+Legend{2} = '$x/D = 25$';
+Legend{3} = '$x/D = 30$';
+Legend{4} = '$x/D = 35$';
+Legend{5} = '$x/D = 40$';
+Legend{6} = '$x/D = 45$';
+Legend{7} = '$x/D = 50$';
+Legend{8} = '$x/D = 55$';
+Legend{9} = '$x/D = 60$';
 
 count = 1;
 for i = 4:12
@@ -500,16 +585,21 @@ end
 %    count = count + 1;
 % end
 
-xlim([0 3]);
+xlim([0 4]);
+xlim([0 4]);
+xticks([0 1 2 3 4]);
+set(gca, 'Xticklabel', []);
 ylim([0 1.2]);
 
-ax = gca;
-ax.FontSize = 16; 
+% ax = gca;
+% ax.FontSize = 16; 
 
 box on;
 
-hXLabel = xlabel('$\eta_{k} = r/L_{k}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+% hXLabel = xlabel('$\eta_{k} = r/L_{k}$','interpreter','latex','fontsize',15);
+% hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+hTitle  = title('(c)','interpreter','latex','fontsize', 15, 'Units', 'normalized', 'Position', [-0.08, 0.95, 0]);
+
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -517,19 +607,14 @@ hLegend.FontSize = 15;
 hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_20_60', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_20_60', '.eps'),'-depsc2','-r600');
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_20_60', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_20_60', '.eps'),'-depsc2','-r600');
 
-%% Similarity profiles of <u_{x}u_{r}> at different x/D locations using defect velocity wake width
+%% Plot of <u_{x}u_{r}> using r/Ld from x/D = 70 to 120
 
-close all;
+axes(ha(5));
 
-load('./files/similarity_uxur.mat');
-reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
-reystress_uw_1d = reystress_uw_1d_smooth;
-
-figure; 
 hold on;
 C = {'-','-','-','-','-','-','-','-','-','-'}; % Cell array of linestyle
 color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
@@ -539,16 +624,15 @@ lineStyles = maxdistcolor(9,@srgb_to_Jab);
 count = 1;
 
 Legend = cell(9,1);
-Legend{1} = 'x/D = 70';
-Legend{2} = 'x/D = 75';
-Legend{3} = 'x/D = 80';
-Legend{4} = 'x/D = 85';
-Legend{5} = 'x/D = 90';
-Legend{6} = 'x/D = 95';
-Legend{7} = 'x/D = 100';
-Legend{8} = 'x/D = 110';
-Legend{9} = 'x/D = 120';
-
+Legend{1} = '$x/D = 70$';
+Legend{2} = '$x/D = 75$';
+Legend{3} = '$x/D = 80$';
+Legend{4} = '$x/D = 85$';
+Legend{5} = '$x/D = 90$';
+Legend{6} = '$x/D = 95$';
+Legend{7} = '$x/D = 100$';
+Legend{8} = '$x/D = 110$';
+Legend{9} = '$x/D = 120$';
 
 count = 1;
 
@@ -565,16 +649,23 @@ for i =  21:22
 end
 
 
-xlim([0 3]);
-ylim([0 1.2]);
-
 ax = gca;
-ax.FontSize = 16; 
+ax.FontSize = 15;
+
+xlim([0 4]);
+xticks([0 1 2 3 4]);
+xticklabels({'0','1','2', '3', '4'});
+
+ylim([0 1.2]);
+yticks([0 .2 .4 .6 .8 1]);
+yticklabels({'0','0.2','0.4', '0.6', '0.8', '1'});
 
 box on;
 
-hXLabel = xlabel('$\eta_{d}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\eta_{d} = r/L_{d}$','interpreter','latex','fontsize',15,'Units', 'normalized', 'Position', [0.5, -0.10, 0]);
+hYLabel = ylabel('$-\langle u_{x}''u_{r}''\rangle$/max$(-\langle u_{x}''u_{r}''\rangle)_{r}$','interpreter','latex','fontsize',15,...
+    'Units', 'normalized', 'Position', [-0.08, 0.45, 0]);
+hTitle  = title('(d)','interpreter','latex','fontsize', 15, 'Units', 'normalized', 'Position', [-0.08, 0.95, 0]);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -582,33 +673,32 @@ hLegend.FontSize = 15;
 hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_70_120', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_70_120', '.eps'),'-depsc2','-r600');
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_70_120', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'similarity_uxur_x_D_ld_70_120', '.eps'),'-depsc2','-r600');
 
+%% Plot of <u_{x}u_{r}> using r/Lk from x/D = 70 to 120
 
-% Unnormalized profiles of <u_{x}u_{r}> at different x/D locations
-
-figure; 
+axes(ha(6));
+ 
 hold on;
 C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
 color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
 
 lineStyles = maxdistcolor(9,@srgb_to_Jab);
-count = 1;
 
 count = 1;
 
 Legend = cell(9,1);
-Legend{1} = 'x/D = 70';
-Legend{2} = 'x/D = 75';
-Legend{3} = 'x/D = 80';
-Legend{4} = 'x/D = 85';
-Legend{5} = 'x/D = 90';
-Legend{6} = 'x/D = 95';
-Legend{7} = 'x/D = 100';
-Legend{8} = 'x/D = 110';
-Legend{9} = 'x/D = 120';
+Legend{1} = '$x/D = 70$';
+Legend{2} = '$x/D = 75$';
+Legend{3} = '$x/D = 80$';
+Legend{4} = '$x/D = 85$';
+Legend{5} = '$x/D = 90$';
+Legend{6} = '$x/D = 95$';
+Legend{7} = '$x/D = 100$';
+Legend{8} = '$x/D = 110$';
+Legend{9} = '$x/D = 120$';
 
 count = 1;
 for i = 14:20
@@ -623,16 +713,21 @@ for i =  21:22
    count = count + 1;
 end
 
-xlim([0 3]);
-ylim([0 1.2]);
-
 ax = gca;
-ax.FontSize = 16; 
+ax.FontSize = 15;
+xlim([0 4]);
+xticks([0 1 2 3 4]);
+xticklabels({'0','1','2', '3', '4'});
+ylim([0 1.2]);
+% yticks([0 .2 .4 .6 .8 1]);
+% yticklabels({'0','0.2','0.4', '0.6', '0.8', '1'});
 
 box on;
 
-hXLabel = xlabel('$\eta_{k}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\eta_{k} = r/L_{k}$','interpreter','latex','fontsize',15,'Units', 'normalized', 'Position', [0.5, -0.10, 0]);
+% hYLabel = ylabel('$-\langle u_{x}^{''}u_{r}^{''}\rangle$/max$(-\langle u_{x}^{''}u_{r}^{''}\rangle)_{r}$','interpreter','latex','fontsize',10,...
+%     'Units', 'normalized', 'Position', [-0.08, 0.45, 0]);
+hTitle  = title('(e)','interpreter','latex','fontsize', 15, 'Units', 'normalized', 'Position', [-0.08, 0.95, 0]);
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
@@ -641,158 +736,104 @@ hLegend.FontWeight = 'bold';
 hLegend.Position = [0 0 1 1];
 
 set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_70_120', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_uxur_x_D_lk_70_120', '.eps'),'-depsc2','-r600');
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_complete', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'similarity_uxur_x_D_complete', '.eps'),'-depsc2','-r600');
 
-%% Similarity profiles of <u_{x}u_{r}> at different x/D locations using D
-
-close all;
-
-load('./files/similarity_uxur.mat');
-reystress_uw_1d_smooth = smoothdata(reystress_uw_1d,'loess',2);
-reystress_uw_1d = reystress_uw_1d_smooth;
-
-figure; 
-hold on;
-%C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
-%color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
-
-lineStyles = maxdistcolor(11,@srgb_to_Jab);
-count = 1;
-
-Legend = cell(11,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 30';
-Legend{3} = 'x/D = 40';
-Legend{4} = 'x/D = 50';
-Legend{5} = 'x/D = 60';
-Legend{6} = 'x/D = 70';
-Legend{7} = 'x/D = 80';
-Legend{8} = 'x/D = 90';
-Legend{9} = 'x/D = 100';
-Legend{10} = 'x/D = 110';
-Legend{11} = 'x/D = 120';
-
-for i =  4:2:20
-   disp(i);
-   plot(rc, -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
-   count = count + 1;
-end
-
-for i =  21:22
-   disp(i);
-   plot(rc, -reystress_uw_1d(1:nr,i)/max(abs(reystress_uw_1d(:,i))), '-', 'Color', lineStyles(count,:), 'Linewidth',2);
-   count = count + 1;
-end
-
-xlim([0 8]);
-ylim([0 1.2]);
-
-ax = gca;
-ax.FontSize = 16; 
-
-box on;
-
-hXLabel = xlabel('$r/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$-\langle u_{x}u_{r}\rangle$/max$(-\langle u_{x}u_{r}\rangle)_{r}$','interpreter','latex','fontsize',15);
-
-hLegend = legend(Legend);
-hLegend.Interpreter = 'Latex';
-hLegend.FontSize = 12;
-hLegend.FontWeight = 'bold';
-hLegend.Position = [0 0 1 1];
-
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'unnormalized_uxur_x_D_20_120', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'unnormalized_uxur_x_D_20_120', '.eps'),'-depsc2','-r600');
-
-
-%% Similarity profiles of <K> at different x/D locations using defect velocity wake width
+%% Figure 4 - Similarity profiles of <K> at different x/D locations using defect velocity wake width
 
 close all;
-
 load('./files/similarity_tke.mat');
 
-figure; 
+% figure; 
+% hold on;
+% C = {'-','-','-','-','-','-','-','-','-','-'}; % Cell array of linestyle
+% color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
+% 
+% %lineStyles = linspecer(10);
+% lineStyles = maxdistcolor(11,@srgb_to_Jab);
+% count = 1;
+% 
+% Legend = cell(11,1);
+% Legend{1} = 'x/D = 20';
+% Legend{2} = 'x/D = 30';
+% Legend{3} = 'x/D = 40';
+% Legend{4} = 'x/D = 50';
+% Legend{5} = 'x/D = 60';
+% Legend{6} = 'x/D = 70';
+% Legend{7} = 'x/D = 80';
+% Legend{8} = 'x/D = 90';
+% Legend{9} = 'x/D = 100';
+% Legend{10} = 'x/D = 110';
+% Legend{11} = 'x/D = 120';
+% 
+% count = 1;
+% for i = 4:2:20
+%    disp(i);
+%    plot(rc/LK_mean_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+%    count = count + 1;
+% end
+% 
+% for i =  21:22
+%    disp(i);
+%    plot(rc/LK_mean_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
+%    count = count + 1;
+% end
+% 
+% xlim([0.05 3]);
+% ylim([0 1.2]);
+% 
+% ax = gca;
+% ax.FontSize = 16; 
+% 
+% box on;
+% 
+% hXLabel = xlabel('$\eta_{d} = r/L_{d}$','interpreter','latex','fontsize',15);
+% hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',15);
+% 
+% hLegend = legend(Legend);
+% hLegend.Interpreter = 'Latex';
+% hLegend.FontSize = 15;
+% hLegend.FontWeight = 'bold';
+% hLegend.Position = [0 0 1 1];
+
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'similarity_k_x_D_ld', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'similarity_k_x_D_ld', '.eps'),'-depsc2','-r600');
+
+
+% K profiles normalized by L_{k} at different x/D locations
+
+close all;
+figure;
+x0=5;
+y0=5;
+width=15;
+height=5;
+set(gcf, 'units', 'inches', 'position',[x0,y0,width,height])
+
+[ha, pos] = tight_subplot(1,2,.1,[.2,.05],[.08 .02]);
+
+axes(ha(2));
 hold on;
-C = {'-','-','-','-','-','-','-','-','-','-'}; % Cell array of linestyle
-color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
 
-%lineStyles = linspecer(10);
-lineStyles = maxdistcolor(11,@srgb_to_Jab);
-count = 1;
-
-Legend = cell(11,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 30';
-Legend{3} = 'x/D = 40';
-Legend{4} = 'x/D = 50';
-Legend{5} = 'x/D = 60';
-Legend{6} = 'x/D = 70';
-Legend{7} = 'x/D = 80';
-Legend{8} = 'x/D = 90';
-Legend{9} = 'x/D = 100';
-Legend{10} = 'x/D = 110';
-Legend{11} = 'x/D = 120';
-
-count = 1;
-for i = 4:2:20
-   disp(i);
-   plot(rc/LK_mean_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
-   count = count + 1;
-end
-
-for i =  21:22
-   disp(i);
-   plot(rc/LK_mean_loc_planes(i,2), tke_1d(1:nr,i)/max(abs(tke_1d(:,i))), 'Color', lineStyles(count,:), 'Linewidth',2);
-   count = count + 1;
-end
-
-xlim([0.05 3]);
-ylim([0 1.2]);
-
-ax = gca;
-ax.FontSize = 16; 
-
-box on;
-
-hXLabel = xlabel('$\eta_{d} = r/L_{d}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',15);
-
-hLegend = legend(Legend);
-hLegend.Interpreter = 'Latex';
-hLegend.FontSize = 15;
-hLegend.FontWeight = 'bold';
-hLegend.Position = [0 0 1 1];
-
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_k_x_D_ld', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_k_x_D_ld', '.eps'),'-depsc2','-r600');
-
-
-% Unnormalized profiles of <u_{x}u_{r}> at different x/D locations
-
-figure; 
-hold on;
 C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
 color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
 
 lineStyles = maxdistcolor(11,@srgb_to_Jab);
 count = 1;
 
-Legend = cell(11,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 30';
-Legend{3} = 'x/D = 40';
-Legend{4} = 'x/D = 50';
-Legend{5} = 'x/D = 60';
-Legend{6} = 'x/D = 70';
-Legend{7} = 'x/D = 80';
-Legend{8} = 'x/D = 90';
-Legend{9} = 'x/D = 100';
-Legend{10} = 'x/D = 110';
-Legend{11} = 'x/D = 120';
-
+% Legend = cell(11,1);
+% Legend{1} = 'x/D = 20';
+% Legend{2} = 'x/D = 30';
+% Legend{3} = 'x/D = 40';
+% Legend{4} = 'x/D = 50';
+% Legend{5} = 'x/D = 60';
+% Legend{6} = 'x/D = 70';
+% Legend{7} = 'x/D = 80';
+% Legend{8} = 'x/D = 90';
+% Legend{9} = 'x/D = 100';
+% Legend{10} = 'x/D = 110';
+% Legend{11} = 'x/D = 120';
 
 count = 1;
 for i = 4:2:20
@@ -807,32 +848,35 @@ for i =  21:22
    count = count + 1;
 end
 
-xlim([0.05 3]);
-ylim([0 1.2]);
-
 ax = gca;
 ax.FontSize = 16; 
 
+ylim([0 1.2]);
+xlim([0.05 5]);
+xticks([0 1 2 3 4 5]);
+xticklabels({'0','1','2', '3', '4', '5'});
+
+
 box on;
 
-hXLabel = xlabel('$\eta_{k} = r/L_{k}$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$\eta_{k} = r/L_{k}$','interpreter','latex','fontsize',20);
+hTitle  = title('(b)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.95, 0]);
 
-hLegend = legend(Legend);
-hLegend.Interpreter = 'Latex';
-hLegend.FontSize = 15;
-hLegend.FontWeight = 'bold';
-hLegend.Position = [0 0 1 1];
-
-
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'similarity_k_x_D_lk', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'similarity_k_x_D_lk', '.eps'),'-depsc2','-r600');
+% hLegend = legend(Legend);
+% hLegend.Interpreter = 'Latex';
+% hLegend.FontSize = 15;
+% hLegend.FontWeight = 'bold';
+% hLegend.Position = [0 0 1 1];
 
 
-% Similarity profiles of <u_{x}u_{r}> at different x/D locations using tke wake width
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'similarity_k_x_D_lk', '.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'similarity_k_x_D_lk', '.eps'),'-depsc2','-r600');
 
-figure; 
+
+% Similarity profiles of K at different x/D locations using tke wake width
+
+axes(ha(1)); 
 hold on;
 C = {'-','-','-','-','-','--','--','--','--','--'}; % Cell array of linestyle
 color = {'k','b','r','g','m','m','g','r','b','k'}; % Cell array of linestyle
@@ -841,17 +885,17 @@ lineStyles = maxdistcolor(11,@srgb_to_Jab);
 count = 1;
 
 Legend = cell(11,1);
-Legend{1} = 'x/D = 20';
-Legend{2} = 'x/D = 30';
-Legend{3} = 'x/D = 40';
-Legend{4} = 'x/D = 50';
-Legend{5} = 'x/D = 60';
-Legend{6} = 'x/D = 70';
-Legend{7} = 'x/D = 80';
-Legend{8} = 'x/D = 90';
-Legend{9} = 'x/D = 100';
-Legend{10} = 'x/D = 110';
-Legend{11} = 'x/D = 120';
+Legend{1} = '$x/D = 20$';
+Legend{2} = '$x/D = 30$';
+Legend{3} = '$x/D = 40$';
+Legend{4} = '$x/D = 50$';
+Legend{5} = '$x/D = 60$';
+Legend{6} = '$x/D = 70$';
+Legend{7} = '$x/D = 80$';
+Legend{8} = '$x/D = 90$';
+Legend{9} = '$x/D = 100$';
+Legend{10} = '$x/D = 110$';
+Legend{11} = '$x/D = 120$';
 
 
 for i = 4:2:20
@@ -866,29 +910,36 @@ for i =  21:22
    count = count + 1;
 end
 
+ax = gca;
+ax.FontSize = 20; 
 
 xlim([0.05 10]);
-ylim([0 1.2]);
+xticks([0 2 4 6 8 10]);
+xticklabels({'0','2','4', '6', '8', '10'});
 
-ax = gca;
-ax.FontSize = 16; 
+ylim([0 1.2]);
+yticks([0 0.2 0.4 0.6 0.8 1])
+yticklabels({'0','0.2','0.4', '0.6', '0.8', '1'});
 
 box on;
 
-hXLabel = xlabel('$r/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',15);
+hXLabel = xlabel('$r/D$','interpreter','latex','fontsize',20);
+hYLabel = ylabel('$K$/$K_{o}$','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.5, 0]);
+hTitle  = title('(a)','interpreter','latex','fontsize',20, 'Units', 'normalized', 'Position', [-0.1, 0.95, 0]);
+
 
 hLegend = legend(Legend);
 hLegend.Interpreter = 'Latex';
 hLegend.FontSize = 15;
 hLegend.FontWeight = 'bold';
-hLegend.Position = [0 0 1 1];
+hLegend.Units = 'normalized';
+hLegend.Position = [-0.1 0.1 1 1];
 
 set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'unnormalized_k_x_D', '.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'unnormalized_k_x_D', '.eps'),'-depsc2','-r600');
+print(gcf,strcat(dirout, 'k_func_r_D_r_Lk_x_D', '.png'),'-dpng2','-r600');  
+print(gcf,strcat(dirout, 'k_func_r_D_r_Lk_x_D', '.eps'),'-depsc2','-r600');
 
-%% Scaling of <uxur> as a function of x/D
+%% Figure 6 ??: Scaling of max(-<uxur>) as a function of x/D
 
 close all;
 
@@ -917,11 +968,10 @@ xlim([0 125]);
 xticks([0 1 10 100]);
 
 ax = gca;
-ax.FontSize = 16; 
-
+ax.FontSize = 15; 
 
 hXLabel = xlabel('$x/D$','interpreter','latex','fontsize',15);
-hYLabel = ylabel('max$(-\langle u_{x}u_{r} \rangle)_{r}$','interpreter','latex','fontsize',15);
+hYLabel = ylabel('max$(-\langle u''_{x}u''_{r} \rangle)_{r}$','interpreter','latex','fontsize',15);
 
 set(gcf, 'PaperPositionMode', 'auto');
 print(gcf,strcat(dirout, 'scaling_uxur_x_D', '.png'),'-dpng2','-r600');  
