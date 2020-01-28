@@ -30,6 +30,6 @@ loglog(x_candidate, k_centerline_normalized.^0.5,'ko');
 hold on;
 
 % Scaling
-[coeffs, S] = polyfit(log(x_candidate(2:5,1)), log(k_centerline_normalized(2:5,1).^0.5), 1);
+[coeffs, S] = polyfit(log(x_candidate(2:5,1)), log(k_centerline_normalized(2:5,1)), 1)
 best_fit_k_cent = polyval(coeffs, log(x_candidate));
 loglog(x_candidate, exp(best_fit_k_cent), 'k-');
