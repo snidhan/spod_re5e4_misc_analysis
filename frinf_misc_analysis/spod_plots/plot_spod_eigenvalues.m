@@ -190,9 +190,9 @@ hXLabel = xlabel('$m$','interpreter','latex','fontsize',20,'Units', 'normalized'
 % hYLabel = ylabel('$\lambda$','interpreter','latex','fontsize',20,'Units', 'normalized', 'Position', [-0.15, 0.45, 0]);
 hTitle  = title('(d)','interpreter','latex','fontsize', 20, 'Units', 'normalized', 'Position', [-0.05, 0.99, 0]);
 
-set(gcf, 'PaperPositionMode', 'auto');
-print(gcf,strcat(dirout, 'eigenspectrum_m12_x_D_20_80.png'),'-dpng2','-r600');  
-print(gcf,strcat(dirout, 'eigenspectrum_m12_x_D_20_80.eps'),'-depsc2','-r600');
+% set(gcf, 'PaperPositionMode', 'auto');
+% print(gcf,strcat(dirout, 'eigenspectrum_m12_x_D_20_80.png'),'-dpng2','-r600');  
+% print(gcf,strcat(dirout, 'eigenspectrum_m12_x_D_20_80.eps'),'-depsc2','-r600');
 %% Figure 7: Contour plot of energy distribution
 
 clearvars -except dirout;
